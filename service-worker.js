@@ -1,4 +1,4 @@
-const CACHE_NAME = 'htp-mms-v4';
+const CACHE_NAME = 'htp-mms-v20260924-running-status-v2';
 const APP_SHELL = [
   './',
   './index.html',

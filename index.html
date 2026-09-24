@@ -121,6 +121,9 @@ body.role-operator .role-pin-btn, body.role-technician .role-pin-btn { display:n
 
 /* Industrial Control Room Dashboard - dashboard only */
 .icr-dashboard{display:grid;gap:12px}.icr-top{background:#fff;border:1px solid #d8e0e7;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(15,23,42,.06)}.icr-title{display:flex;align-items:center;gap:10px}.icr-mark{width:10px;height:34px;background:#0f4c81;border-radius:3px}.icr-title h2{margin:0;font-size:21px;color:#14212b}.icr-title p{margin:3px 0 0;color:#66737d;font-size:11px}.icr-clock{text-align:right;color:#334155;font-size:12px;font-weight:700}.icr-clock span{display:block;color:#74808a;font-weight:500;margin-top:2px}.icr-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.icr-kpi{background:#fff;border:1px solid #dce3e8;border-radius:9px;padding:12px 14px;min-height:84px;position:relative;overflow:hidden}.icr-kpi:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#0f4c81}.icr-kpi.warn:before{background:#c98516}.icr-kpi.danger:before{background:#b42318}.icr-kpi.pm:before{background:#246b9b}.icr-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#687680;font-weight:800}.icr-num{font-size:30px;font-weight:800;color:#17232d;line-height:1.05;margin-top:7px}.icr-foot{font-size:10px;color:#7b8790;margin-top:4px}.icr-grid{display:grid;grid-template-columns:1.35fr .9fr .75fr;gap:10px}.icr-card{background:#fff;border:1px solid #dce3e8;border-radius:9px;padding:13px;min-width:0}.icr-card h3{margin:0 0 10px;font-size:13px;color:#26343e}.icr-card .sub{font-size:10px;color:#7b8790;margin-top:-6px;margin-bottom:9px}.icr-list{display:grid;gap:6px}.icr-row{display:flex;justify-content:space-between;gap:10px;padding:8px;background:#f6f8fa;border-left:3px solid #b8c4cc;border-radius:4px;font-size:10px}.icr-row b{font-size:11px;color:#26343e}.icr-row small{color:#74808a}.icr-status{font-weight:800;font-size:9px;padding:3px 6px;border-radius:10px;background:#eef2f5;white-space:nowrap}.icr-status.red{background:#fde8e7;color:#a31d16}.icr-status.amber{background:#fff4d8;color:#8a5b00}.icr-status.green{background:#e6f4ea;color:#216e39}.icr-bars{display:grid;gap:9px}.icr-bar-row{display:grid;grid-template-columns:105px 1fr 28px;align-items:center;gap:7px;font-size:10px}.icr-bar{height:7px;background:#edf1f3;border-radius:8px;overflow:hidden}.icr-bar i{display:block;height:100%;background:#3d6f96}.icr-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.icr-actions button{background:#f5f7f9;border:1px solid #d8e0e5;border-radius:6px;padding:9px 6px;font-size:10px;font-weight:700;color:#34434d;cursor:pointer}.icr-actions button:hover{background:#eaf0f4}.icr-alert{display:flex;justify-content:space-between;align-items:center;background:#fff8e7;border:1px solid #ead9a7;border-left:4px solid #c98516;border-radius:8px;padding:9px 12px;font-size:11px;color:#5d4a18}.icr-alert button{font-size:10px;padding:5px 9px}.icr-trend{height:110px;display:flex;align-items:flex-end;gap:8px;padding:8px 5px 0;border-bottom:1px solid #d9e1e6}.icr-trend .col{flex:1;text-align:center;font-size:8px;color:#7b8790}.icr-trend .barv{height:75px;display:flex;align-items:flex-end;justify-content:center}.icr-trend i{display:block;width:60%;max-width:28px;background:#547b9b;border-radius:3px 3px 0 0;min-height:3px}.icr-metrics{display:grid;grid-template-columns:1fr 1fr;gap:7px}.icr-metric{background:#f6f8fa;border:1px solid #e1e6ea;border-radius:6px;padding:9px}.icr-metric b{font-size:18px;display:block;color:#17232d}.icr-metric span{font-size:9px;color:#71808a}.icr-muted{color:#7b8790;font-size:10px;padding:12px;text-align:center}.icr-dashboard .dash-source{font-size:9px;color:#87929a;text-align:right}@media(max-width:950px){.icr-grid{grid-template-columns:1fr 1fr}.icr-grid .wide{grid-column:span 2}}@media(max-width:700px){.icr-top{align-items:flex-start;gap:10px;flex-direction:column}.icr-clock{text-align:left}.icr-kpis{grid-template-columns:1fr 1fr}.icr-grid{grid-template-columns:1fr}.icr-grid .wide{grid-column:auto}.icr-actions{grid-template-columns:1fr 1fr}}
+
+#bd_status:disabled{font-weight:800;background:#f5f8fa;color:#173f60;opacity:1;cursor:not-allowed}
+#bd .workflow-status-note{font-size:11px;color:#536875}
 </style>
 
 <style id="satAddonStyle">
@@ -911,7 +914,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <div class="app-brand"><img alt="Milestone Logo" src="data:image/png;base64,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"/><div><div class="title">MILESTONE GEAR LTD. — UNIT-7</div>
 <div class="sub">Maintenance &amp; Utility Daily Recording App</div></div></div>
 <div class="user-role-box">
-<span class="role-badge" id="currentRoleBadge">👤 Operator</span>
+<span class="role-badge" id="currentRoleBadge">👤 Operator</span><span id="operatorSaveHint" style="font-size:10px;color:inherit;opacity:.9;white-space:nowrap">✓ Data Entry</span>
 <select id="roleSelector" onchange="handleRoleChange(this.value)">
 <option value="operator">Operator</option>
 <option value="technician">Technician</option>
@@ -925,7 +928,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <button class="secondary" onclick="sheetTestConnection()" type="button">Test Connection</button>
 <button class="secondary" onclick="sheetSaveNow()" type="button">☁️ Save to Sheet</button>
 <button class="secondary" onclick="sheetLoadNow()" type="button">📥 Load from Sheet</button>
-<button class="secondary" onclick="sheetSetUrl()" type="button" title="Google Apps Script Web App URL set karo (Admin)">⚙️ URL</button>
+
 <button class="secondary" id="installAppBtn" onclick="htpInstallApp()" type="button">📲 Install App</button>
 </div>
 <div class="tabs mms-module-nav">
@@ -1166,7 +1169,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <div class="field maintOnly"><label>History Card Entry</label><select id="mr_history"><option>Yes</option><option>No</option></select></div>
 <div class="field maintOnly"><label>History Card Updated By</label><input id="mr_history_by"/></div>
 <div class="actions wide">
-<button class="primary tech-only" id="mrSaveBtn" onclick="saveMR()">Save New Maintenance Request</button>
+<button class="primary" id="mrSaveBtn" onclick="saveMR()">Save New Maintenance Request</button>
 <button class="secondary" onclick="clearMR()">Clear / New Request</button>
 <button class="warning" onclick="printMR()">Print Current Slip</button><button class="secondary" onclick="sendCurrentWhatsApp()">📲 WhatsApp</button>
 </div>
@@ -1209,7 +1212,8 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <div class="field wide"><label>Spare Parts Used</label><input id="bd_spare" list="sparePartDatalist" placeholder="Select/type spare part"/></div>
 <div class="field"><label>Qty</label><input id="bd_qty"/></div>
 <div class="field wide"><label>Breakdown Attended By</label><input id="bd_attended"/></div>
-<div class="field"><label>Status</label><select id="bd_status"><option>OK</option><option>Open</option><option>In Progress</option><option>Closed</option></select></div>
+<div class="field"><label>Workflow Status</label><select id="bd_status" disabled><option>Open</option><option>In Progress</option><option>Closed</option><option>Cancelled</option><option>OK</option></select></div>
+<div class="field wide"><div class="note" style="margin-top:0"><b>Breakdown workflow:</b> Operator creates the breakdown → <b>Open</b>. Technician starts work from Maintenance Request → <b>In Progress</b>. After machine is restored and request is closed → <b>Closed / OK</b>. Status is updated automatically from the Maintenance Request module.</div></div>
 <div class="actions wide"><button class="primary" id="bdSaveBtn" onclick="saveBreakdown()">Save Breakdown</button><button class="secondary" onclick="clearBreakdown()">Clear</button></div>
 </div>
 </div>
@@ -1304,7 +1308,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <div class="field"><label>Done Date</label><input id="pm_date" type="date"/></div>
 <div class="field"><label>Checked By</label><input id="pm_checked_by"/></div>
 <div class="field"><label>Verified By</label><input id="pm_verified_by"/></div>
-<div class="actions"><button class="primary tech-only" onclick="savePM()">Save PM Record</button><button class="secondary" onclick="clearPM()">Clear</button><button class="secondary" onclick="printPM()">Print Current</button><button class="secondary" onclick="exportPMCSV()">Export CSV</button></div>
+<div class="actions"><button class="primary" onclick="savePM()">Save PM Record</button><button class="secondary" onclick="clearPM()">Clear</button><button class="secondary" onclick="printPM()">Print Current</button><button class="secondary" onclick="exportPMCSV()">Export CSV</button></div>
 </div><div class="note">The checklist activities, frequency, standards and methods are taken from the uploaded <b>FMT-MNT-04 Preventive Maintenance Check List</b>. Fill Observation, Work Done and Remark for each point and save the completed PM record.</div></div>
 <div class="card">
 <div class="head2">PM Checklist Editor</div>
@@ -1343,7 +1347,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <div class="card" style="margin-top:10px;margin-bottom:0">
 <div class="tablewrap">
 <table class="tbl"><thead><tr>
-<th>S. No.</th><th>Department</th><th>Machine Number</th><th>Machine Name</th><th>Machine Grade</th><th>Make / Manufacturer</th><th>Cost Center</th>
+<th>S. No.</th><th>Department</th><th>Machine Number</th><th>Machine Name</th><th>Machine Grade</th><th>Make / Manufacturer</th><th>Cost Center</th><th>Status</th>
 </tr></thead><tbody id="mmBody"></tbody></table>
 </div>
 </div>
@@ -1447,7 +1451,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <button class="primary" onclick="satNew()">＋ New SAT</button>
 <button class="secondary" onclick="satSave()">💾 Save SAT</button>
 <button class="warning" onclick="satPrint()">🖨 Print Final Report</button>
-<button class="danger tech-only" onclick="satClear()">✕ Clear</button>
+<button class="danger" onclick="satClear()">✕ Clear</button>
 </div>
 <div class="sat-note">SAT module is designed from the supplied 10-03-2026-SAT.xlsx sheet. The print report follows the same 3-page A4 structure.</div>
 <div class="sat-tabs">
@@ -1628,7 +1632,7 @@ const MACHINE_MASTER_STORAGE_KEY='htp7_machine_master_editable_v1';
 const PM_MACHINE_CHECKLIST_KEY='htp7_pm_machine_checklist_v1';
 let PM_MACHINE_CHECKLIST_MAP=JSON.parse(localStorage.getItem(PM_MACHINE_CHECKLIST_KEY)||'{}');
 function saveEditableMachineMaster(){localStorage.setItem(MACHINE_MASTER_STORAGE_KEY,JSON.stringify(MACHINE_MASTER));}
-function loadEditableMachineMaster(){try{const saved=JSON.parse(localStorage.getItem(MACHINE_MASTER_STORAGE_KEY)||'null');if(Array.isArray(saved)&&saved.length){MACHINE_MASTER.splice(0,MACHINE_MASTER.length,...saved.map((m,i)=>({sno:i+1,department:m.department||'',machineNumber:String(m.machineNumber||'').trim(),machineName:m.machineName||'',grade:m.grade||'',make:m.make||'',costCenter:m.costCenter||''})).filter(m=>m.machineNumber));}}catch(e){console.warn('Machine master load skipped',e)}}
+function loadEditableMachineMaster(){try{const saved=JSON.parse(localStorage.getItem(MACHINE_MASTER_STORAGE_KEY)||'null');if(Array.isArray(saved)&&saved.length){MACHINE_MASTER.splice(0,MACHINE_MASTER.length,...saved.map((m,i)=>({sno:i+1,department:m.department||'',machineNumber:String(m.machineNumber||'').trim(),machineName:m.machineName||'',grade:m.grade||'',make:m.make||'',costCenter:m.costCenter||'',status:String(m.status||'RUNNING').toUpperCase()})).filter(m=>m.machineNumber));}}catch(e){console.warn('Machine master load skipped',e)}}
 function savePMMachineChecklistMap(){localStorage.setItem(PM_MACHINE_CHECKLIST_KEY,JSON.stringify(PM_MACHINE_CHECKLIST_MAP));}
 function defaultPMChecklistForMachine(m){if(!m)return '';const n=String(m.machineName||'').toUpperCase(),no=String(m.machineNumber||'').toUpperCase(),keys=Object.keys(PM_CHECKLISTS||{});let exact=keys.find(k=>n.includes(String(k).toUpperCase())||String(k).toUpperCase().includes(n));if(exact)return exact;if(n.includes('SEAL QUANCH')||no.startsWith('SQF'))return keys.find(k=>k.toUpperCase()==='SQF')||'';if(n.includes('PUNCH'))return keys.find(k=>k.toUpperCase().includes('PUNCH'))||'';if(n.includes('WASH'))return keys.find(k=>k.toUpperCase().includes('WASH'))||'';if(n.includes('TEMPER'))return keys.find(k=>k.toUpperCase().includes('TEMP'))||keys.find(k=>k.toUpperCase()==='TEMPRING')||'';if(n.includes('CHARGE'))return keys.find(k=>k.toUpperCase().includes('CHARGE'))||'';if(n.includes('SHOT BLAST'))return keys.find(k=>k.toUpperCase().includes('SHOT'))||'';if(n.includes('GEAR TOOTH'))return keys.find(k=>k.toUpperCase().includes('GTC'))||'';return keys[0]||'';}
 function pmChecklistForMachine(machineNo){const m=MACHINE_MASTER.find(x=>String(x.machineNumber)===String(machineNo));let key=PM_MACHINE_CHECKLIST_MAP[String(machineNo)]||defaultPMChecklistForMachine(m);if(key&&!PM_CHECKLISTS[key]){delete PM_MACHINE_CHECKLIST_MAP[String(machineNo)];key=defaultPMChecklistForMachine(m);}if(key&&!PM_MACHINE_CHECKLIST_MAP[String(machineNo)]){PM_MACHINE_CHECKLIST_MAP[String(machineNo)]=key;savePMMachineChecklistMap();}return key||'';}
@@ -1650,7 +1654,7 @@ function refreshMachineDependentUI(){
 }
 function pmPlanMachineSetupOptions(){const sel=document.getElementById('pmpMachineSetup');if(!sel)return;const cur=sel.value;sel.innerHTML='<option value="">-- Select Machine --</option>'+MACHINE_MASTER.map(m=>`<option value="${esc(m.machineNumber)}">${esc(m.machineNumber)} — ${esc(m.machineName)}</option>`).join('');if(cur&&MACHINE_MASTER.some(m=>m.machineNumber===cur))sel.value=cur;}
 function pmMachineSetupChanged(){}
-function pmPlanAddMachine(){const machineNumber=(prompt('Machine Number / Code:')||'').trim();if(!machineNumber)return;if(MACHINE_MASTER.some(m=>String(m.machineNumber).toLowerCase()===machineNumber.toLowerCase()))return alert('This machine number already exists.');const machineName=(prompt('Machine Name:',machineNumber)||'').trim();if(!machineName)return;const department=(prompt('Department / Line:','HEAT TREATMENT')||'').trim();const grade=(prompt('Grade:','B')||'').trim();const make=(prompt('Make / Manufacturer:','')||'').trim();const costCenter=(prompt('Cost Center:','')||'').trim();MACHINE_MASTER.push({sno:MACHINE_MASTER.length+1,department,machineNumber,machineName,grade,make,costCenter});MACHINE_MASTER.forEach((m,i)=>m.sno=i+1);saveEditableMachineMaster();const keys=Object.keys(PM_CHECKLISTS||{}),list=keys.map((k,i)=>`${i+1}. ${k}`).join('\n');const ans=prompt('Select PM Check Sheet checklist number for '+machineNumber+' (leave blank for automatic match):\n\n'+list,'');let key=ans&&/^\d+$/.test(ans)?keys[Number(ans)-1]:'';if(!key)key=defaultPMChecklistForMachine(MACHINE_MASTER[MACHINE_MASTER.length-1]);if(key){PM_MACHINE_CHECKLIST_MAP[machineNumber]=key;savePMMachineChecklistMap();}refreshMachineDependentUI();const sel=document.getElementById('pmpMachineSetup');if(sel)sel.value=machineNumber;alert('Machine added successfully. PM Plan and PM Check Sheet are linked automatically.');}
+function pmPlanAddMachine(){const machineNumber=(prompt('Machine Number / Code:')||'').trim();if(!machineNumber)return;if(MACHINE_MASTER.some(m=>String(m.machineNumber).toLowerCase()===machineNumber.toLowerCase()))return alert('This machine number already exists.');const machineName=(prompt('Machine Name:',machineNumber)||'').trim();if(!machineName)return;const department=(prompt('Department / Line:','HEAT TREATMENT')||'').trim();const grade=(prompt('Grade:','B')||'').trim();const make=(prompt('Make / Manufacturer:','')||'').trim();const costCenter=(prompt('Cost Center:','')||'').trim();MACHINE_MASTER.push({sno:MACHINE_MASTER.length+1,department,machineNumber,machineName,grade,make,costCenter,status:'RUNNING'});MACHINE_MASTER.forEach((m,i)=>m.sno=i+1);saveEditableMachineMaster();const keys=Object.keys(PM_CHECKLISTS||{}),list=keys.map((k,i)=>`${i+1}. ${k}`).join('\n');const ans=prompt('Select PM Check Sheet checklist number for '+machineNumber+' (leave blank for automatic match):\n\n'+list,'');let key=ans&&/^\d+$/.test(ans)?keys[Number(ans)-1]:'';if(!key)key=defaultPMChecklistForMachine(MACHINE_MASTER[MACHINE_MASTER.length-1]);if(key){PM_MACHINE_CHECKLIST_MAP[machineNumber]=key;savePMMachineChecklistMap();}refreshMachineDependentUI();const sel=document.getElementById('pmpMachineSetup');if(sel)sel.value=machineNumber;alert('Machine added successfully. PM Plan and PM Check Sheet are linked automatically.');}
 function pmPlanEditMachine(){const no=f('pmpMachineSetup');if(!no)return alert('Please select a machine.');const m=MACHINE_MASTER.find(x=>x.machineNumber===no);if(!m)return;const nn=(prompt('Machine Number:',m.machineNumber)||'').trim();if(!nn)return;if(nn!==m.machineNumber&&MACHINE_MASTER.some(x=>x.machineNumber.toLowerCase()===nn.toLowerCase()))return alert('Another machine already uses this number.');const oldNo=m.machineNumber;m.machineNumber=nn;m.machineName=(prompt('Machine Name:',m.machineName)||m.machineName).trim();m.department=(prompt('Department / Line:',m.department)||m.department).trim();m.grade=(prompt('Grade:',m.grade)||m.grade).trim();m.make=(prompt('Make / Manufacturer:',m.make)||m.make).trim();m.costCenter=(prompt('Cost Center:',m.costCenter)||m.costCenter).trim();if(oldNo!==nn){Object.keys(pmPlanData).filter(k=>k.endsWith('__'+oldNo)).forEach(k=>{pmPlanData[k.replace('__'+oldNo,'__'+nn)]=pmPlanData[k];delete pmPlanData[k]});localStorage.setItem(PMPLAN_KEY,JSON.stringify(pmPlanData));if(PM_MACHINE_CHECKLIST_MAP[oldNo]){PM_MACHINE_CHECKLIST_MAP[nn]=PM_MACHINE_CHECKLIST_MAP[oldNo];delete PM_MACHINE_CHECKLIST_MAP[oldNo];savePMMachineChecklistMap();}}MACHINE_MASTER.forEach((x,i)=>x.sno=i+1);saveEditableMachineMaster();refreshMachineDependentUI();const sel=document.getElementById('pmpMachineSetup');if(sel)sel.value=nn;alert('Machine updated successfully.');}
 function pmPlanRemoveMachine(){const no=f('pmpMachineSetup');if(!no)return alert('Please select a machine.');const m=MACHINE_MASTER.find(x=>x.machineNumber===no);if(!m)return;if(!confirm('Remove '+m.machineNumber+' — '+m.machineName+' from the active Machine Master and PM Plan?\n\nExisting PM records are retained and can return if the machine is added again.'))return;const i=MACHINE_MASTER.indexOf(m);MACHINE_MASTER.splice(i,1);MACHINE_MASTER.forEach((x,j)=>x.sno=j+1);saveEditableMachineMaster();delete PM_MACHINE_CHECKLIST_MAP[no];savePMMachineChecklistMap();refreshMachineDependentUI();alert('Machine removed from active PM Plan and machine lists. Existing saved PM records were retained.');}
 function pmPlanAssignChecklist(){const no=f('pmpMachineSetup');if(!no)return alert('Please select a machine.');const keys=Object.keys(PM_CHECKLISTS||{});if(!keys.length)return alert('No PM Check Sheet checklist is available.');const current=pmChecklistForMachine(no),list=keys.map((k,i)=>`${i+1}. ${k}`).join('\n'),ans=prompt('Select checklist number for '+no+'. Current: '+(current||'None')+'\n\n'+list,'');if(!ans)return;if(!/^\d+$/.test(ans)||!keys[Number(ans)-1])return alert('Invalid checklist number.');PM_MACHINE_CHECKLIST_MAP[no]=keys[Number(ans)-1];savePMMachineChecklistMap();alert('PM Check Sheet linked to '+no+': '+PM_MACHINE_CHECKLIST_MAP[no]);}
@@ -1660,7 +1664,29 @@ let data={pf:load('pf'),pc:load('pc'),dg:load('dg'),mr:load('mr'),mh:load('mh'),
 let edit={pf:null,pc:null,dg:null,mr:null,mh:null,pm:null,bd:null};
 
 function load(k){try{return JSON.parse(localStorage.getItem(KEY[k])||'[]')}catch(e){return []}}
-function persist(k){localStorage.setItem(KEY[k],JSON.stringify(data[k]))}
+let _sheetAutoSaveTimer=null;
+let _sheetAutoSaveBusy=false;
+let _sheetAutoSavePending=false;
+function scheduleSheetAutoSave(){
+  if(typeof sheetSaveNow!=='function') return;
+  _sheetAutoSavePending=true;
+  clearTimeout(_sheetAutoSaveTimer);
+  _sheetAutoSaveTimer=setTimeout(async()=>{
+    if(_sheetAutoSaveBusy)return;
+    _sheetAutoSaveBusy=true;
+    _sheetAutoSavePending=false;
+    try{await sheetSaveNow({silent:true});}
+    catch(e){console.warn('Automatic Google Sheet sync failed:',e);}
+    finally{
+      _sheetAutoSaveBusy=false;
+      if(_sheetAutoSavePending)scheduleSheetAutoSave();
+    }
+  },1800);
+}
+function persist(k){
+  localStorage.setItem(KEY[k],JSON.stringify(data[k]));
+  scheduleSheetAutoSave();
+}
 function f(id){return document.getElementById(id).value}
 function setv(id,v){document.getElementById(id).value=v??''}
 function num(v){let n=Number(v);return Number.isFinite(n)?n:0}
@@ -1684,47 +1710,160 @@ function breakdownMachineChanged(){
  if(m) setv('bd_section',m.department);
 }
 function initBreakdown(){initFinancialYearControls();syncBreakdownFY();populateBreakdownMachineDropdown();if(!f('bd_date'))setv('bd_date',new Date().toISOString().slice(0,10));renderBreakdown();renderMTTR()}
+function restoreBreakdownSpare(r){
+  if(!r||!Array.isArray(r.spareIssued)||!r.spareIssued.length)return;
+  r.spareIssued.forEach(x=>{let item=data.spare.find(s=>String(s.sr)===String(x.sr));let qty=Number(x.qty)||0;if(item&&qty>0){item.availableQty=Number(item.availableQty||0)+qty;data.spareTxn.push({date:r.date||new Date().toISOString().slice(0,10),spare:spareDisplay(item),qty,machine:r.machine||'',reason:'Breakdown spare returned on edit/delete',source:'Breakdown Return'});}});
+  persist('spare');persist('spareTxn');
+}
+function breakdownStatusForMachine(status){
+  let st=String(status||'').trim().toLowerCase();
+  if(st==='open'||st==='in progress'||st.includes('in progress')) return 'STOPPED';
+  if(st==='closed'||st==='ok'||st==='cancelled'||st==='complete'||st==='completed') return 'RUNNING';
+  return 'RUNNING';
+}
+function normalizeMachineNo(v){return String(v??'').trim().toUpperCase();}
+function breakdownMachineKey(r){
+  let n=String(r?.machineNumber||r?.machineNo||'').trim();
+  if(n)return n;
+  let text=String(r?.machine||'').trim();
+  let m=text.match(/^([^—\-]+?)\s*[—-]\s*/);
+  return m?String(m[1]).trim():text;
+}
+function breakdownRowStamp(r){
+  let d=String(r?.date||'').trim();
+  let t=String(r?.updatedAt||r?.to||r?.from||'').trim();
+  return d+' '+t;
+}
+function currentBreakdownForMachine(machineNo){
+  const no=normalizeMachineNo(machineNo);
+  if(!no)return null;
+  let rows=data.bd.filter(r=>normalizeMachineNo(breakdownMachineKey(r))===no);
+  if(!rows.length){
+    const m=MACHINE_MASTER.find(x=>normalizeMachineNo(x.machineNumber)===no);
+    const name=String(m?.machineName||'').trim();
+    if(name) rows=data.bd.filter(r=>String(r.machine||'').trim()===name);
+  }
+  if(!rows.length)return null;
+  rows.sort((a,b)=>breakdownRowStamp(b).localeCompare(breakdownRowStamp(a))||Number(b.id||0)-Number(a.id||0));
+  return rows[0];
+}
+function effectiveMachineStatus(machine){
+  const no=normalizeMachineNo(machine?.machineNumber||machine?.machineNo);
+  if(!no)return 'RUNNING';
+  // Maintenance Request is the workflow source of truth for linked breakdowns.
+  const linkedMR=data.mr.filter(r=>normalizeMachineNo(r.machineNo||'')===no && r.sourceBreakdownId);
+  if(linkedMR.length){
+    linkedMR.sort((a,b)=>String(b.updatedAt||b.mdate||b.pdate||'').localeCompare(String(a.updatedAt||a.mdate||a.pdate||''))||Number(b.sr||0)-Number(a.sr||0));
+    const st=String(linkedMR[0].status||'').trim().toLowerCase();
+    if(st==='open'||st==='in progress'||st.includes('in progress')) return 'STOPPED';
+    if(st==='closed'||st==='ok'||st==='cancelled'||st==='complete'||st==='completed') return 'RUNNING';
+  }
+  const bd=currentBreakdownForMachine(no);
+  return breakdownStatusForMachine(bd?.status);
+}
+function syncAllMachineStatusesFromBreakdowns(){
+  MACHINE_MASTER.forEach(m=>{
+    const st=effectiveMachineStatus(m);
+    if(String(m.status||'').toUpperCase()!==st)m.status=st;
+  });
+  MACHINE_MASTER.forEach((m,i)=>m.sno=i+1);
+  saveEditableMachineMaster();
+}
+function syncMachineStatusFromBreakdown(r){
+  if(!r)return;
+  const no=breakdownMachineKey(r);
+  if(!no)return;
+  const m=MACHINE_MASTER.find(x=>normalizeMachineNo(x.machineNumber)===normalizeMachineNo(no));
+  if(!m)return;
+  const st=effectiveMachineStatus(m);
+  if(String(m.status||'').toUpperCase()!==st){
+    m.status=st;
+    saveEditableMachineMaster();
+  }
+}
+function nextBreakdownRequestSerial(){
+  let nums=data.mr.map(x=>Number(x.sr)).filter(Number.isFinite);
+  return nums.length?Math.max(...nums)+1:1;
+}
+function createMaintenanceRequestFromBreakdown(r){
+  if(!r||!r.id)return null;
+  let existing=data.mr.find(x=>String(x.sourceBreakdownId||'')===String(r.id));
+  if(existing){r.sourceMrSr=String(existing.sr);return existing;}
+  let m=machineMasterInfo(r.machineNumber);
+  let req={
+    sr:String(nextBreakdownRequestSerial()),status:'Open',sourceBreakdownId:String(r.id),
+    pdate:r.date||new Date().toISOString().slice(0,10),ptime:r.from||'',
+    machine:r.machine||m?.machineName||'',machineNo:r.machineNumber||'',section:r.section||m?.department||'',
+    grade:m?.grade||'',make:m?.make||'',spareParts:[],qty:'',reqBy:'Breakdown Operator',reqCode:'',prodSign:'',
+    recvBy:'',recvCode:'',mdate:'',mtime:'',maintSign:'',problem:r.reason||'',observation:'',action:'',spare:'',
+    hdate:'',htime:'',hprodSign:'',hmaintSign:'',duration:'',history:'No',historyBy:'',maintCost:'',
+    updatedAt:new Date().toISOString()
+  };
+  data.mr.push(req);r.sourceMrSr=String(req.sr);persist('mr');
+  return req;
+}
 function saveBreakdown(){
- let old=edit.bd!==null?data.bd[edit.bd]:null;let mn=f('bd_machine');let mm=MACHINE_MASTER.find(x=>x.machineNumber===mn);let r={id:old?.id||Date.now(),sourceMrSr:old?.sourceMrSr||'',date:f('bd_date'),machine:(mm?mm.machineNumber+' — '+mm.machineName:mn),machineNumber:mn,reason:f('bd_reason'),type:f('bd_type'),section:f('bd_section'),from:f('bd_from'),to:f('bd_to'),hours:bdHours(f('bd_from'),f('bd_to')),action:f('bd_action'),spare:f('bd_spare'),qty:f('bd_qty'),attended:f('bd_attended'),status:f('bd_status'),auto:old?.auto||false,updatedAt:new Date().toISOString()};
- if(!r.date||!r.machine||!r.reason||!r.from||!r.to)return alert('Please enter Date, Machine, Breakdown Reason, From and To time.');
- r.hours=Number(r.hours.toFixed(2));let wasEdit=edit.bd!==null;
- if(!wasEdit&&r.spare&&String(r.spare).trim()){try{deductSpareForNewBreakdown(r)}catch(e){return alert(e.message)}}
- if(wasEdit)data.bd[edit.bd]=r;else data.bd.push(r);persist('bd');
- if(r.spare&&String(r.spare).trim()){
-   let hm=data.mh.find(x=>String(x.sourceSr||'')===String(r.sourceMrSr||''));
-   if(!hm&&!wasEdit){data.mh.push({id:'MH-BD-'+Date.now(),sourceSr:r.sourceMrSr||'',machineNo:r.machineNumber,machine:r.machine,year:'',make:mm?.make||'',date:r.date,attendedBy:r.attended,reason:r.reason,action:r.action,spares:r.spare,bdHours:String(r.hours),cost:'',auto:true,updatedAt:new Date().toISOString()});persist('mh');}
-   else if(hm){hm.date=r.date;hm.machineNo=r.machineNumber;hm.machine=r.machine;hm.make=mm?.make||hm.make;hm.attendedBy=r.attended;hm.reason=r.reason;hm.action=r.action;hm.spares=r.spare;hm.bdHours=String(r.hours);hm.updatedAt=new Date().toISOString();persist('mh');}
- }
- edit.bd=null;clearBreakdown();renderBreakdown();renderMTTR();renderHistory();renderSpareInventory();alert(wasEdit?'Breakdown updated successfully.':'Breakdown saved successfully. Monthly report, history card and spare inventory are updated automatically.');
+  spareInitialise();
+  if(typeof currentAppRole!=='undefined' && currentAppRole==='technician')return alert('Technician status is controlled from the Maintenance Request module. Please update the linked request there.');
+  let old=edit.bd!==null?data.bd[edit.bd]:null;
+  let mn=f('bd_machine');let mm=MACHINE_MASTER.find(x=>x.machineNumber===mn);
+  let r={id:old?.id||Date.now(),sourceMrSr:old?.sourceMrSr||'',date:f('bd_date'),machine:(mm?mm.machineNumber+' — '+mm.machineName:mn),machineNumber:mn,reason:f('bd_reason'),type:f('bd_type'),section:f('bd_section'),from:f('bd_from'),to:f('bd_to'),hours:bdHours(f('bd_from'),f('bd_to')),action:f('bd_action'),spare:f('bd_spare'),qty:f('bd_qty'),attended:f('bd_attended'),status:old?.status||'Open',auto:old?.auto||false,updatedAt:new Date().toISOString()};
+  if(!r.date||!r.machine||!r.reason||!r.from)return alert('Please enter Date, Machine, Breakdown Reason and Breakdown From time.');
+  if(!old)r.status='Open';
+  r.hours=Number((r.hours||0).toFixed(2));
+  let wasEdit=edit.bd!==null;
+  if(wasEdit&&old?.spareIssued)restoreBreakdownSpare(old);
+  try{if(r.spare&&String(r.spare).trim())deductSpareForNewBreakdown(r);}catch(e){return alert(e.message||'Unable to issue spare from inventory.');}
+  if(wasEdit)data.bd[edit.bd]=r;else data.bd.push(r);
+  syncMachineStatusFromBreakdown(r);
+  let req=createMaintenanceRequestFromBreakdown(r);
+  persist('bd');persist('mr');
+  if(r.spare&&String(r.spare).trim()){
+    let hm=data.mh.find(x=>String(x.sourceSr||'')===String(r.sourceMrSr||''));
+    if(!hm&&!wasEdit){data.mh.push({id:'MH-BD-'+Date.now(),sourceSr:r.sourceMrSr||'',machineNo:r.machineNumber,machine:r.machine,year:'',make:mm?.make||'',date:r.date,attendedBy:r.attended,reason:r.reason,action:r.action,spares:r.spare,bdHours:String(r.hours),cost:'',auto:true,updatedAt:new Date().toISOString()});persist('mh');}
+    else if(hm){hm.date=r.date;hm.machineNo=r.machineNumber;hm.machine=r.machine;hm.make=mm?.make||hm.make;hm.attendedBy=r.attended;hm.reason=r.reason;hm.action=r.action;hm.spares=r.spare;hm.bdHours=String(r.hours);hm.updatedAt=new Date().toISOString();persist('mh');}
+  }
+  edit.bd=null;clearBreakdown();renderBreakdown();renderMR();renderMTTR();renderHistory();renderSpareInventory();populateMaintenanceRequests();
+  alert(wasEdit?'Breakdown updated successfully.':'Breakdown saved as OPEN. Maintenance Request #'+(req?.sr||'')+' created automatically.');
 }
 function syncBreakdownFromMaintenance(r){
-  // Maintenance Request Slip is the source of truth for breakdown entries.
-  // Sync only after maintenance completion time is available, so MTTR/MTBF are not distorted by open requests.
-  if(!r || !r.sr || !r.pdate || !r.ptime || !r.hdate || !r.htime) return false;
-  let hours='';
-  if(r.duration){
-    let m=String(r.duration).match(/^(\d+):(\d{2})$/);
-    if(m) hours=Number(m[1])+Number(m[2])/60;
-  }
-  if(!Number.isFinite(hours) || hours<=0) hours=bdHours(r.ptime,r.htime);
+  if(!r || !r.sr)return false;
   let existing=data.bd.find(x=>String(x.sourceMrSr||'')===String(r.sr));
-  let row={
-    id:existing?.id||Date.now(), sourceMrSr:String(r.sr), date:r.pdate, machine:r.machine||r.machineNo||'',
-    reason:r.problem||'', type:existing?.type||'E/M', section:r.section||'', from:r.ptime||'', to:r.htime||'',
-    hours:Number((hours||0).toFixed(2)), action:r.action||'', spare:r.spare||'', qty:r.qty??existing?.qty??'',
-    attended:r.recvBy||'', status:r.status||'Closed', auto:true, updatedAt:new Date().toISOString()
-  };
-  if(existing) Object.assign(existing,row); else data.bd.push(row);
+  if(!existing && r.sourceBreakdownId)existing=data.bd.find(x=>String(x.id)===String(r.sourceBreakdownId));
+  if(!existing)return false;
+  let status=String(r.status||'Open').trim();
+  let upper=status.toUpperCase();
+  let oldTo=existing.to||'';
+  let newTo=r.htime||oldTo;
+  let hours=existing.hours||0;
+  if(r.duration){let m=String(r.duration).match(/^(\d+):(\d{2})$/);if(m)hours=Number(m[1])+Number(m[2])/60;}
+  if((upper==='CLOSED'||upper==='OK') && (!Number.isFinite(hours)||hours<=0))hours=bdHours(existing.from,newTo);
+  existing.sourceMrSr=String(r.sr);
+  existing.machine=r.machine||existing.machine;
+  existing.machineNumber=r.machineNo||existing.machineNumber||'';
+  existing.reason=r.problem||existing.reason||'';
+  existing.section=r.section||existing.section||'';
+  existing.status=upper==='OK'?'OK':status;
+  existing.attended=r.recvBy||existing.attended||'';
+  existing.action=r.action||existing.action||'';
+  existing.spare=r.spare||existing.spare||'';
+  existing.qty=r.qty??existing.qty??'';
+  if(r.mdate)existing.maintenanceDate=r.mdate;
+  if(r.mtime)existing.maintenanceTime=r.mtime;
+  if(newTo)existing.to=newTo;
+  if(Number.isFinite(Number(hours)) && Number(hours)>0)existing.hours=Number(Number(hours).toFixed(2));
+  existing.updatedAt=new Date().toISOString();
+  syncMachineStatusFromBreakdown(existing);
   persist('bd');
   return true;
 }
-
-function clearBreakdown(){edit.bd=null;let btn=document.getElementById('bdSaveBtn');if(btn)btn.textContent='Save Breakdown';populateBreakdownMachineDropdown();let ids=['bd_machine','bd_reason','bd_type','bd_section','bd_from','bd_to','bd_hours','bd_action','bd_spare','bd_qty','bd_attended'];ids.forEach(id=>setv(id,''));setv('bd_type','E/M');setv('bd_section','HT');setv('bd_status','OK');setv('bd_date',new Date().toISOString().slice(0,10))}
+function clearBreakdown(){edit.bd=null;let btn=document.getElementById('bdSaveBtn');if(btn)btn.textContent='Save Breakdown';populateBreakdownMachineDropdown();let ids=['bd_machine','bd_reason','bd_type','bd_section','bd_from','bd_to','bd_hours','bd_action','bd_spare','bd_qty','bd_attended'];ids.forEach(id=>setv(id,''));setv('bd_type','E/M');setv('bd_section','HT');setv('bd_status','Open');setv('bd_date',new Date().toISOString().slice(0,10))}
 function renderBreakdown(){let label=f('bd_month')||'April 2026', ym=new Date(label+' 1').getFullYear(), mm=new Date(label+' 1').getMonth()+1;let a=data.bd.filter(r=>{let d=new Date((r.date||'')+'T00:00:00');return !isNaN(d)&&d.getFullYear()===ym&&d.getMonth()+1===mm}).sort((x,y)=>(x.date||'').localeCompare(y.date||''));let total=a.reduce((s,r)=>s+num(r.hours),0);setText('bd_sum_hours',total.toFixed(2));setText('bd_sum_count',a.length);document.getElementById('bdBody').innerHTML=a.map((r,i)=>{let idx=data.bd.indexOf(r);return `<tr><td>${i+1}</td><td>${esc(fmtDate(r.date))}</td><td>${esc(r.machine)}</td><td>${esc(r.reason)}</td><td>${esc(r.type)}</td><td>${esc(r.section)}</td><td>${esc(r.from)}</td><td>${esc(r.to)}</td><td>${num(r.hours).toFixed(2)}</td><td>${esc(r.action)}</td><td>${esc(r.spare)}</td><td>${esc(r.qty)}</td><td>${esc(r.attended)}</td><td>${esc(r.status)}</td><td><button class="secondary" onclick="editBreakdown(${idx})">Edit</button> <button class="danger" onclick="deleteBreakdown(${idx})">Delete</button></td></tr>`}).join('')}
 function editBreakdown(i){let r=data.bd[i];if(!r)return;edit.bd=i;populateBreakdownMachineDropdown();let machineNo=r.machineNumber||MACHINE_MASTER.find(m=>r.machine===m.machineNumber||r.machine===m.machineName||String(r.machine||'').startsWith(m.machineNumber+' — '))?.machineNumber||'';setv('bd_date',r.date);setv('bd_machine',machineNo);setv('bd_reason',r.reason);setv('bd_type',r.type||'E/M');setv('bd_section',r.section||'HT');setv('bd_from',r.from);setv('bd_to',r.to);setv('bd_hours',num(r.hours).toFixed(2));setv('bd_action',r.action);setv('bd_spare',r.spare);setv('bd_qty',r.qty);setv('bd_attended',r.attended);setv('bd_status',r.status||'OK');document.getElementById('bdSaveBtn').textContent='Update Breakdown';document.getElementById('bd').scrollIntoView({behavior:'smooth'});}
-function deleteBreakdown(i){let r=data.bd[i];if(!r)return;if(!confirm('Delete this breakdown entry?'))return;data.bd.splice(i,1);persist('bd');if(edit.bd===i)edit.bd=null;renderBreakdown();renderMTTR();alert('Breakdown entry deleted successfully.');}
+function deleteBreakdown(i){let r=data.bd[i];if(!r)return;if(!confirm('Delete this breakdown entry?'))return;if(r.spareIssued)restoreBreakdownSpare(r);data.bd.splice(i,1);persist('bd');if(edit.bd===i)edit.bd=null;renderBreakdown();renderMTTR();renderSpareInventory();alert('Breakdown entry deleted successfully. Spare stock has been restored and Google Sheet will update automatically.');}
 
-function mttrStats(){return BD_MONTHS.map(label=>{let d=new Date(label+' 1'),y=d.getFullYear(),m=d.getMonth()+1,a=data.bd.filter(r=>{let x=new Date((r.date||'')+'T00:00:00');return !isNaN(x)&&x.getFullYear()===y&&x.getMonth()+1===m});let hrs=a.reduce((s,r)=>s+num(r.hours),0),count=a.length,available=bdMachineCount()*BD_SHIFT_HOURS*BD_DAYS;return {label,hrs,count,available,pct:available?hrs*100/available:0,mtbf:count?available/count:0,mttr:count?hrs/count:0}})}
+function isMTTRMTBFEligible(r){let st=String(r?.status||'').trim().toLowerCase();return st==='closed'||st==='ok'}
+function mttrStats(){return BD_MONTHS.map(label=>{let d=new Date(label+' 1'),y=d.getFullYear(),m=d.getMonth()+1,a=data.bd.filter(r=>{let x=new Date((r.date||'')+'T00:00:00');return isMTTRMTBFEligible(r)&&!isNaN(x)&&x.getFullYear()===y&&x.getMonth()+1===m});let hrs=a.reduce((s,r)=>s+num(r.hours),0),count=a.length,available=bdMachineCount()*BD_SHIFT_HOURS*BD_DAYS,uptime=Math.max(0,available-hrs);return {label,hrs,count,available,uptime,pct:available?hrs*100/available:0,mtbf:count?uptime/count:0,mttr:count?hrs/count:0}})}
 function renderMTTR(){if(document.getElementById('mttr_year')&&document.getElementById('mttr_year').value){const y=Number(document.getElementById('mttr_year').value);if(Number.isInteger(y)&&y!==selectedBreakdownFY){selectedBreakdownFY=y;BD_MONTHS=financialYearMonths(y);}}let a=mttrStats();document.getElementById('mttrHead').innerHTML='<tr><th>PARAMETER</th>'+a.map(x=>`<th>${esc(x.label.slice(0,3).toUpperCase())}</th>`).join('')+'<th>TARGET</th></tr>';let rows=[['B/D HRS',a.map(x=>x.hrs.toFixed(2)),'','hours'],['NO. OF MACHINES',a.map(()=>bdMachineCount()),'','count'],['B/D %AGE',a.map(x=>x.pct.toFixed(2)+'%'),(BD_TARGET*100).toFixed(0)+'%','percent'],['NO. OF BREAKDOWN',a.map(x=>x.count),'','count'],['TOTAL AVAILABLE MACHINE HRS',a.map(x=>x.available),'','hours'],['MTBF',a.map(x=>x.mtbf.toFixed(2)),'','hours'],['MTTR',a.map(x=>x.mttr.toFixed(2)),'','hours'],['B/D %AGE TARGET',a.map(()=>BD_TARGET*100+'%'),'','percent']];document.getElementById('mttrBody').innerHTML=rows.map(row=>`<tr class="mttr-row-${row[3]}"><td class="label">${row[0]}</td>${row[1].map(v=>`<td>${v}</td>`).join('')}<td class="target-cell">${row[2]}</td></tr>`).join('');drawTrend('mttrChartPct',a.map(x=>x.pct),'B/D %AGE');drawTrend('mttrChartMttr',a.map(x=>x.mttr),'MTTR (HRS)');drawTrend('mttrChartMtbf',a.map(x=>x.mtbf),'MTBF (HRS)')}
 function drawTrend(id,vals,ylabel){let svg=document.getElementById(id);if(!svg)return;let W=700,H=250,L=48,R=18,T=24,B=38,plotW=W-L-R,plotH=H-T-B,finite=vals.filter(v=>Number.isFinite(v)),rawMax=Math.max(0,...finite),max=rawMax>0?rawMax*1.2:1,slot=plotW/Math.max(vals.length,1),bw=Math.min(30,slot*0.52);let grid='';for(let g=0;g<=4;g++){let y=T+plotH-(plotH*g/4),value=max*g/4;grid+=`<line x1="${L}" y1="${y}" x2="${W-R}" y2="${y}" stroke="#dbe5ec" stroke-width="1"/><text x="${L-7}" y="${y+3}" text-anchor="end" font-size="9" fill="#617486">${value.toFixed(rawMax<10?1:0)}</text>`}let bars=vals.map((v,i)=>{if(!Number.isFinite(v))return '';let h=(v/max)*plotH,x=L+i*slot+(slot-bw)/2,y=T+plotH-h;return `<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(h,1)}" rx="3" fill="#1769aa"/><text x="${x+bw/2}" y="${Math.max(15,y-6)}" text-anchor="middle" font-size="9" font-weight="700" fill="#173f60">${Number(v).toFixed(1)}</text>`}).join('');let labels=vals.map((v,i)=>`<text x="${L+i*slot+slot/2}" y="${H-13}" text-anchor="middle" font-size="9" font-weight="700" fill="#536b7d">${i<12?BD_MONTHS[i].slice(0,3).toUpperCase():'TARGET'}</text>`).join('');svg.innerHTML=`<rect x="0.5" y="0.5" width="699" height="249" rx="6" fill="#ffffff" stroke="#d6e1e8"/>${grid}<line x1="${L}" y1="${T+plotH}" x2="${W-R}" y2="${T+plotH}" stroke="#72889a" stroke-width="1.2"/>${bars}${labels}<text x="${L}" y="15" font-size="10" font-weight="800" fill="#173f60">${esc(ylabel)}</text>`}
 function printBreakdownMonth(){
@@ -1776,7 +1915,13 @@ function renderDashboard(){
  setText('dashMachines',MACHINE_MASTER.length);setText('dashOpen',open.length);setText('dashBreakdowns',monthBD.length);
  let dashPMDue=0;
  try{let plan=JSON.parse(localStorage.getItem('htp7_pm_plan_v1')||'{}'),today=new Date();today.setHours(0,0,0,0);let limit=new Date(today);limit.setDate(limit.getDate()+30);let seen={};Object.keys(plan).forEach(k=>{let r=plan[k]||{},ds=r.nextDate||((!r.actual&&r.planned)?r.planned:'');if(!ds)return;let d=new Date(ds+'T00:00:00');if(isNaN(d))return;if(d>=today&&d<=limit){let m=k.split('__').slice(1).join('__'),key=m+'__'+ds;if(!seen[key]){seen[key]=1;dashPMDue++;}}});}catch(e){}
- setText('dashPM',dashPMDue);setText('mcdPMMetric',dashPMDue);setText('mcdBDMetric',monthBD.length);setText('mcdOpenMetric',open.length);setText('mcdTotalMR',data.mr.length);setText('mcdRunning',Math.max(0,MACHINE_MASTER.length-monthBD.length));setText('mcdInProgress',monthBD.filter(r=>String(r.status||'').toLowerCase().includes('progress')).length);setText('mcdCompleted',monthBD.filter(r=>['closed','complete','completed'].includes(String(r.status||'').toLowerCase())).length);setText('refAlertPM',dashPMDue);setText('refAlertBD',monthBD.length);setText('refAlertMR',open.length);
+ setText('dashPM',dashPMDue);setText('mcdPMMetric',dashPMDue);setText('mcdBDMetric',monthBD.length);setText('mcdOpenMetric',open.length);setText('mcdTotalMR',data.mr.length);let activeBDMachineNos=new Set();
+MACHINE_MASTER.forEach(m=>{
+  const no=String(m.machineNumber||'').trim();
+  if(no && effectiveMachineStatus(m)==='STOPPED') activeBDMachineNos.add(no);
+});
+setText('mcdRunning',Math.max(0,MACHINE_MASTER.length-activeBDMachineNos.size));
+setText('mcdInProgress',monthBD.filter(r=>String(r.status||'').toLowerCase().includes('progress')).length);setText('mcdCompleted',monthBD.filter(r=>['closed','complete','completed'].includes(String(r.status||'').toLowerCase())).length);setText('refAlertPM',dashPMDue);setText('refAlertBD',monthBD.length);setText('refAlertMR',open.length);
  let bdHours=monthBD.reduce((t,r)=>t+(parseFloat(r.hours)||0),0),bdAvg=monthBD.length?bdHours/monthBD.length:0;
  setText('mcdBDHours',bdHours.toFixed(1)+' h');setText('mcdBDAvg',bdAvg.toFixed(1)+' h');
  let pmProg=document.getElementById('mcdPMProgress');if(pmProg)pmProg.style.width=Math.min(100,dashPMDue*10)+'%';
@@ -1785,7 +1930,7 @@ function renderDashboard(){
  let rb=[...data.bd].sort((a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.to||'').localeCompare(String(a.to||''))).slice(0,5);let rbd=document.getElementById('dashRecentBD');if(rbd)rbd.innerHTML=rb.length?rb.map(r=>`<div class="mcd-row"><span><b>${esc(r.machine||'Machine not specified')}</b><small>${esc(r.reason||'Breakdown record')}</small></span><span class="right">${esc(fmtDate(r.date))}<br><span class="mcd-badge red">${(parseFloat(r.hours)||0).toFixed(2)} h</span></span></div>`).join(''):'<div class="mcd-empty">No breakdown data available</div>';
  let rm=open.slice().sort((a,b)=>(b.pdate||'').localeCompare(a.pdate||'')).slice(0,5);let rmr=document.getElementById('dashRecentMR');if(rmr)rmr.innerHTML=rm.length?rm.map(r=>{let st=String(r.status||'Open');let low=st.toLowerCase(),cl=low.includes('close')||low.includes('complete'),badge=cl?'green':low.includes('progress')?'amber':'red';return `<div class="mcd-row"><span><b>SR ${esc(r.sr||'')}</b><small>${esc(r.machine||'Machine not specified')}</small></span><span class="right"><span class="mcd-badge ${badge}">${esc(st)}</span><br>${esc(fmtDate(r.pdate||r.date||''))}</span></div>`}).join(''):'<div class="mcd-empty">No open maintenance requests</div>';
  let trend=document.getElementById('mcdTrend');if(trend){let months=[];for(let i=5;i>=0;i--){let d=new Date(ym,mon-1-i,1),yy=d.getFullYear(),mm=d.getMonth()+1,count=data.bd.filter(r=>{let x=new Date((r.date||'')+'T00:00:00');return !isNaN(x)&&x.getFullYear()===yy&&x.getMonth()+1===mm}).length;months.push({label:d.toLocaleDateString('en-IN',{month:'short'}),count});}let mx=Math.max(1,...months.map(x=>x.count));trend.innerHTML=months.map(x=>`<div class="mcd-month"><span class="val">${x.count}</span><div class="track"><i style="height:${Math.max(3,x.count/mx*100)}%"></i></div><label>${x.label}</label></div>`).join('');}
- let act=document.getElementById('refRecentActivity');if(act){let arr=[...data.bd].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);act.innerHTML=arr.length?arr.map(r=>`<div class=\"mcd-row\"><span><b>${esc(r.machine||'Machine')}</b><small>Breakdown · ${esc(r.reason||'Maintenance activity')}</small></span><span class=\"right\">${esc(fmtDate(r.date))}<br><span class=\"mcd-badge red\">${(parseFloat(r.hours)||0).toFixed(1)} h</span></span></div>`).join(''):'<div class=\"mcd-empty\">No recent activity</div>';} let mt=document.getElementById('refMTTR');if(mt)mt.textContent=bdAvg.toFixed(1)+' h';let mb=document.getElementById('refMTBF');if(mb)mb.textContent=monthBD.length?(Math.max(0,30*24-bdHours)/monthBD.length).toFixed(1)+' h':'—';let dd=document.getElementById('dashDate');if(dd)dd.textContent=now.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
+ let act=document.getElementById('refRecentActivity');if(act){let arr=[...data.bd].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);act.innerHTML=arr.length?arr.map(r=>`<div class=\"mcd-row\"><span><b>${esc(r.machine||'Machine')}</b><small>Breakdown · ${esc(r.reason||'Maintenance activity')}</small></span><span class=\"right\">${esc(fmtDate(r.date))}<br><span class=\"mcd-badge red\">${(parseFloat(r.hours)||0).toFixed(1)} h</span></span></div>`).join(''):'<div class=\"mcd-empty\">No recent activity</div>';} let mt=document.getElementById('refMTTR');if(mt)mt.textContent=monthBD.filter(isMTTRMTBFEligible).length?(monthBD.filter(isMTTRMTBFEligible).reduce((s,r)=>s+num(r.hours),0)/monthBD.filter(isMTTRMTBFEligible).length).toFixed(1)+' h':'0.0 h';let mb=document.getElementById('refMTBF');if(mb){let eligible=monthBD.filter(isMTTRMTBFEligible),eligibleHours=eligible.reduce((s,r)=>s+num(r.hours),0),available=bdMachineCount()*BD_SHIFT_HOURS*BD_DAYS,uptime=Math.max(0,available-eligibleHours);mb.textContent=eligible.length?(uptime/eligible.length).toFixed(1)+' h':'—';}let dd=document.getElementById('dashDate');if(dd)dd.textContent=now.toLocaleDateString('en-IN',{weekday:'long',day:'2-digit',month:'short',year:'numeric'});
 }
 function duration(a,b){if(!a||!b)return '';let [ay,am,ad]=a?[]:[];return timeDuration(a,b)}
 function timeDuration(start,end){
@@ -1968,12 +2113,26 @@ function selectMachine(machineNumber){
  setv('mr_grade',m.grade);
  setv('mr_make',m.make);
 }
+function updateMachineStatus(machineNo,status){
+ const no=String(machineNo||'').trim();
+ if(!no)return false;
+ const m=MACHINE_MASTER.find(x=>String(x.machineNumber||'').trim()===no);
+ if(!m)return false;
+ m.status=String(status||'RUNNING').trim().toUpperCase();
+ MACHINE_MASTER.forEach((x,i)=>x.sno=i+1);
+ saveEditableMachineMaster();
+ if(typeof renderMachineMaster==='function')renderMachineMaster();
+ if(typeof renderDashboard==='function')renderDashboard();
+ return true;
+}
+function markMachineRunningAfterBreakdown(machineNo){return updateMachineStatus(machineNo,'RUNNING');}
+
 function renderMachineMaster(){
  let q=(f('mm_search')||'').toLowerCase(),dept=f('mm_dept_filter')||'';
  let a=MACHINE_MASTER.filter(m=>(!dept||m.department===dept)&&(!q||Object.values(m).join(' ').toLowerCase().includes(q)));
- document.getElementById('mmBody').innerHTML=a.map(m=>`<tr>
+ document.getElementById('mmBody').innerHTML=a.map(m=>{let st=effectiveMachineStatus(m);return `<tr>
  <td>${m.sno}</td><td>${esc(m.department)}</td><td><b>${esc(m.machineNumber)}</b></td><td>${esc(m.machineName)}</td>
- <td>${esc(m.grade)}</td><td>${esc(m.make)}</td><td>${esc(m.costCenter)}</td></tr>`).join('');
+ <td>${esc(m.grade)}</td><td>${esc(m.make)}</td><td>${esc(m.costCenter)}</td><td><b style="color:${st==='RUNNING'?'#16803a':'#b42318'}">${esc(st)}</b></td></tr>`}).join('');
 }
 
 function machineMasterAdd(){
@@ -2050,11 +2209,11 @@ function printMachineMaster(){
  const q=(f('mm_search')||'').toLowerCase(),dept=f('mm_dept_filter')||'';
  const rows=MACHINE_MASTER.filter(m=>(!dept||m.department===dept)&&(!q||Object.values(m).join(' ').toLowerCase().includes(q)));
  const escp=v=>String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
- const body=rows.map((m,i)=>`<tr><td>${i+1}</td><td>${escp(m.department)}</td><td>${escp(m.machineNumber)}</td><td>${escp(m.machineName)}</td><td>${escp(m.grade)}</td><td>${escp(m.make)}</td><td>${escp(m.costCenter)}</td></tr>`).join('');
+ const body=rows.map((m,i)=>`<tr><td>${i+1}</td><td>${escp(m.department)}</td><td>${escp(m.machineNumber)}</td><td>${escp(m.machineName)}</td><td>${escp(m.grade)}</td><td>${escp(m.make)}</td><td>${escp(m.costCenter)}</td><td>${escp(m.status||'RUNNING')}</td></tr>`).join('');
  const w=window.open('','_blank','width=1200,height=800');
  if(!w){alert('Please allow pop-ups to print Machine Master.');return;}
  w.document.open();
- w.document.write(`<!doctype html><html><head><title>Machine Master</title><style>@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#000;margin:0;font-size:10px}.title{text-align:center;font-size:18px;font-weight:800}.sub{text-align:center;font-size:14px;font-weight:700;margin:4px 0 10px}.meta{border:1px solid #000;padding:5px;margin-bottom:7px;font-weight:700}.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{border:2px solid #000;padding:5px;text-align:center;vertical-align:middle}.tbl th{font-weight:800}.tbl th:nth-child(1){width:6%}.tbl th:nth-child(2){width:20%}.tbl th:nth-child(3){width:15%}.tbl th:nth-child(4){width:25%}.tbl th:nth-child(5){width:10%}.tbl th:nth-child(6){width:15%}.tbl th:nth-child(7){width:15%}.footer{margin-top:8px;font-size:9px;font-weight:700;display:flex;justify-content:space-between}</style></head><body><div class="title">MILESTONE GEARS LTD. UNIT-7</div><div class="sub">MASTER LIST OF EQUIPMENTS / MACHINES</div><div class="meta">Department: ${escp(dept||'All Departments')} &nbsp; | &nbsp; Search: ${escp(q||'All Machines')} &nbsp; | &nbsp; Total Machines: ${rows.length}</div><table class="tbl"><thead><tr><th>S. No.</th><th>Department</th><th>Machine Number</th><th>Machine Name</th><th>Machine Grade</th><th>Make / Manufacturer</th><th>Cost Center</th></tr></thead><tbody>${body||'<tr><td colspan="7">No machines found.</td></tr>'}</tbody></table><div class="footer"><span>Machine Master</span><span>Printed: ${new Date().toLocaleString('en-GB')}</span></div>
+ w.document.write(`<!doctype html><html><head><title>Machine Master</title><style>@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#000;margin:0;font-size:10px}.title{text-align:center;font-size:18px;font-weight:800}.sub{text-align:center;font-size:14px;font-weight:700;margin:4px 0 10px}.meta{border:1px solid #000;padding:5px;margin-bottom:7px;font-weight:700}.tbl{width:100%;border-collapse:collapse}.tbl th,.tbl td{border:2px solid #000;padding:5px;text-align:center;vertical-align:middle}.tbl th{font-weight:800}.tbl th:nth-child(1){width:6%}.tbl th:nth-child(2){width:20%}.tbl th:nth-child(3){width:15%}.tbl th:nth-child(4){width:25%}.tbl th:nth-child(5){width:10%}.tbl th:nth-child(6){width:15%}.tbl th:nth-child(7){width:15%}.footer{margin-top:8px;font-size:9px;font-weight:700;display:flex;justify-content:space-between}</style></head><body><div class="title">MILESTONE GEARS LTD. UNIT-7</div><div class="sub">MASTER LIST OF EQUIPMENTS / MACHINES</div><div class="meta">Department: ${escp(dept||'All Departments')} &nbsp; | &nbsp; Search: ${escp(q||'All Machines')} &nbsp; | &nbsp; Total Machines: ${rows.length}</div><table class="tbl"><thead><tr><th>S. No.</th><th>Department</th><th>Machine Number</th><th>Machine Name</th><th>Machine Grade</th><th>Make / Manufacturer</th><th>Cost Center</th><th>Status</th></tr></thead><tbody>${body||'<tr><td colspan="8">No machines found.</td></tr>'}</tbody></table><div class="footer"><span>Machine Master</span><span>Printed: ${new Date().toLocaleString('en-GB')}</span></div>
 </body></html>`);
  w.document.close();w.focus();setTimeout(()=>w.print(),500);
 }
@@ -2140,7 +2299,9 @@ function saveMR(){
   if(edit.mr!==null)data.mr[edit.mr]=r;else data.mr.push(r);persist('mr');let saved={...r};edit.mr=null;clearMR();renderMR();populateMaintenanceRequests();alert('Maintenance Request saved successfully. Sr. No. '+saved.sr);if(getWANumber())sendWhatsAppFor(saved);else alert('Request saved. Add WhatsApp number above if you want WhatsApp notification.');
  }else{
   if(edit.mr===null){let idx=document.getElementById('mr_select_existing')?.value;if(idx!=='')edit.mr=Number(idx);}if(edit.mr===null)return alert('Please select an Open / In Progress request first.');let old=data.mr[edit.mr];
-  old.status=r.status;old.recvBy=r.recvBy;old.recvCode=r.recvCode;old.mdate=r.mdate;old.mtime=r.mtime;old.maintSign=r.maintSign;old.observation=r.observation;old.action=r.action;old.spare=r.spare;old.spareParts=r.spareParts;old.qty=r.qty;old.hdate=r.hdate;old.htime=r.htime;old.hprodSign=r.hprodSign;old.hmaintSign=r.hmaintSign;old.duration=r.duration;old.history=r.history;old.historyBy=r.historyBy;old.maintCost=r.maintCost;
+  if(Array.isArray(old.spareIssued)&&old.spareIssued.length)restoreBreakdownSpare(old);
+  if(r.spareParts&&r.spareParts.length){try{let issued=spareIssueFromBreakdown(r.spare,r.qty,{date:r.mdate||r.pdate,machine:r.machine,reason:r.problem});old.spareIssued=issued;}catch(e){return alert(e.message||'Unable to issue spare from inventory.');}}
+  old.status=r.status;old.recvBy=r.recvBy;old.recvCode=r.recvCode;old.mdate=r.mdate;old.mtime=r.mtime;old.maintSign=r.maintSign;old.observation=r.observation;old.action=r.action;old.spare=r.spare;old.spareParts=r.spareParts;old.qty=r.qty;old.hdate=r.hdate;old.htime=r.htime;old.hprodSign=r.hprodSign;old.hmaintSign=r.hmaintSign;old.duration=r.duration;old.history=r.history;old.historyBy=r.historyBy;old.maintCost=r.maintCost;old.updatedAt=new Date().toISOString();
   let historyUpdated=syncHistoryFromMaintenance(old);
   let breakdownUpdated=syncBreakdownFromMaintenance(old);
   persist('mr');let saved={...old};edit.mr=null;renderMR();populateMaintenanceRequests();renderHistory();renderBreakdown();renderMTTR();alert('Maintenance update saved for Sr. No. '+saved.sr+(historyUpdated?'\n\nMachine History Card automatically updated because Spare Part Used was entered.':'')+(breakdownUpdated?'\n\nBreakdown Monthly Report and MTTR are automatically updated.':''));
@@ -2216,14 +2377,40 @@ function spareInitialise(){
   refreshSpareDatalist();
 }
 function refreshSpareDatalist(){const dl=document.getElementById('sparePartDatalist');if(!dl)return;dl.innerHTML=data.spare.map(r=>`<option value="${escAttr(spareDisplay(r))}"></option>`).join('');}
-function spareFind(text){const n=spareNorm(text);if(!n)return null;return data.spare.find(r=>spareNorm(spareDisplay(r))===n)||data.spare.find(r=>spareNorm(r.description)===n)||data.spare.find(r=>spareNorm(r.description+' '+r.spec)===n)||null;}
+function spareFind(text){
+  const raw=String(text??'').trim();
+  const n=spareNorm(raw);
+  if(!n)return null;
+  const list=Array.isArray(data.spare)?data.spare:[];
+  // Match in a stable priority order: exact display, code, description+spec,
+  // description, then tolerant token/substring matching. This allows users to
+  // select an item by the same text shown in Spare Inventory OR by Item Code.
+  let item=list.find(r=>spareNorm(spareDisplay(r))===n);
+  if(item)return item;
+  item=list.find(r=>spareNorm(r.code)===n);
+  if(item)return item;
+  item=list.find(r=>spareNorm(String(r.description||'')+' '+String(r.spec||''))===n);
+  if(item)return item;
+  item=list.find(r=>spareNorm(r.description)===n);
+  if(item)return item;
+  // Handle common user entry variants such as "name - spec", "name/spec",
+  // extra spaces, or a pasted value containing the displayed text.
+  item=list.find(r=>{
+    const d=spareNorm(r.description), sp=spareNorm(r.spec), mk=spareNorm(r.make), c=spareNorm(r.code);
+    return (d && (n.includes(d) || d.includes(n))) ||
+           (sp && n.includes(sp) && d && n.includes(d)) ||
+           (c && n.includes(c));
+  });
+  return item||null;
+}
 function spareQtyNumber(v){let m=String(v??'').match(/[-+]?\d+(?:\.\d+)?/);return m?Number(m[0]):0;}
 function spareIssueFromBreakdown(spareText,qtyText,r){
+  spareInitialise();
   let names=String(spareText||'').split(/\n|,/).map(x=>x.trim()).filter(Boolean);let qtys=String(qtyText||'').split(/\n|,/).map(x=>spareQtyNumber(x));let issued=[];
-  names.forEach((name,i)=>{let item=spareFind(name);let qty=qtys[i]||(qtys.length===1?qtys[0]:0);if(!item||qty<=0)return;if(Number(item.availableQty)<qty)throw new Error('Insufficient stock for '+spareDisplay(item)+'. Available: '+item.availableQty);item.availableQty=Number(item.availableQty)-qty;issued.push({item,qty});data.spareTxn.push({date:r.date||new Date().toISOString().slice(0,10),spare:spareDisplay(item),qty,machine:r.machine||'',reason:r.reason||'',source:'Breakdown'});});
+  names.forEach((name,i)=>{let item=spareFind(name);let qty=qtys[i]||(qtys.length===1?qtys[0]:0);if(!item)throw new Error('Spare not found in Spare Inventory: '+name+'\nPlease select/type the Spare Inventory item name or Item Code.');if(!(qty>0))throw new Error('Please enter a valid quantity for '+spareDisplay(item)+'.');let available=Number(item.availableQty);if(!Number.isFinite(available))available=Number(item.initialQty)||0;if(available<qty)throw new Error('Insufficient stock for '+spareDisplay(item)+'. Available: '+available);item.availableQty=available-qty;issued.push({sr:item.sr,description:item.description,spec:item.spec,qty});data.spareTxn.push({date:r.date||new Date().toISOString().slice(0,10),spare:spareDisplay(item),qty,machine:r.machine||'',reason:r.reason||'',source:'Breakdown'});});
   if(issued.length){persist('spare');persist('spareTxn');}return issued;
 }
-function deductSpareForNewBreakdown(r){if(!r||!r.spare||!String(r.spare).trim())return [];let issued=spareIssueFromBreakdown(r.spare,r.qty,r);r.spareIssued=issued.map(x=>({sr:x.item.sr,description:x.item.description,spec:x.item.spec,qty:x.qty}));return issued;}
+function deductSpareForNewBreakdown(r){if(!r||!r.spare||!String(r.spare).trim())return [];let issued=spareIssueFromBreakdown(r.spare,r.qty,r);r.spareIssued=issued;return issued;}
 function renderSpareInventory(){spareInitialise();let body=document.getElementById('spareBody');if(!body)return;let q=(document.getElementById('sp_search')?.value||'').toLowerCase().trim(),filter=document.getElementById('sp_stock_filter')?.value||'';let a=data.spare.filter(r=>{let hay=JSON.stringify(r).toLowerCase(),qty=Number(r.availableQty)||0;return (!q||hay.includes(q))&&(!filter||(filter==='available'&&qty>1)||(filter==='low'&&qty>0&&qty<=1)||(filter==='zero'&&qty<=0));});body.innerHTML=a.map(r=>{let qty=Number(r.availableQty)||0,cls=qty<=0?'spare-zero':qty<=1?'spare-low':'';return `<tr class="${cls}" data-spare-sr="${escAttr(r.sr)}"><td>${esc(r.sr)}${r.custom?'<span class="spare-custom-badge">NEW</span>':''}</td><td>${esc(r.code)}</td><td>${esc(r.description)}</td><td>${esc(r.spec)}</td><td>${esc(r.make)}</td><td>${esc(r.qtyOriginal)}</td><td><b>${qty}</b> ${esc(r.unit)}</td><td>${esc(r.location)}</td><td><button class="secondary spare-select-btn" type="button" onclick="selectSpareForRemoval('${escAttr(r.sr)}')">Select</button> <button class="secondary" type="button" onclick="spareAdjust('${escAttr(r.sr)}')">Adjust</button></td></tr>`}).join('');let total=data.spare.length,available=data.spare.filter(r=>(Number(r.availableQty)||0)>1).length,low=data.spare.filter(r=>(Number(r.availableQty)||0)<=1).length;setText('sp_total_items',total);setText('sp_available_items',available);setText('sp_low_items',low);let tx=[...data.spareTxn].reverse().slice(0,100),tb=document.getElementById('spareTxnBody');if(tb)tb.innerHTML=tx.map(t=>`<tr><td>${esc(fmtDate(t.date))}</td><td>${esc(t.spare)}</td><td>${esc(t.qty)}</td><td>${esc(t.machine)}</td><td>${esc(t.reason)}</td><td>${esc(t.source)}</td></tr>`).join('');refreshSpareDatalist();}
 let selectedSpareSr=null, editingSpareSr=null;
 function clearSpareEditor(){['sp_new_code','sp_new_description','sp_new_spec','sp_new_make','sp_new_qty','sp_new_unit','sp_new_location'].forEach(id=>setv(id,''));}
@@ -2675,9 +2862,10 @@ setTimeout(satInit,0);
    buttons can still change data. This layer enforces the same permissions at
    click/change level without changing existing module logic. */
 (function(){
+  /* Operator is allowed to ENTER and SAVE routine records.
+     Technician/Admin retain edit/delete and maintenance-master controls. */
   const TECH = new Set([
-    'saveMR','savePM','savePF','savePC','saveDG','saveBreakdown','saveHistoryManual',
-    'satSave','satClear','addSparePartRow','setMRRole','saveWANumber',
+    'saveHistoryManual','addSparePartRow','setMRRole','saveWANumber',
     'editMR','deleteMR','delRow','editBreakdown','deleteBreakdown',
     'editPC','editDG','editPF','loadPMRecord','deletePMCheckpoint','editPMCheckpoint',
     'pmPlanField','pmPlanClear','pmPlanOpenCheckSheet','pmPlanOpenSavedCheckSheet',
@@ -3127,7 +3315,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 </script>
 <script id="googleSheetSyncLayer">
 /* Google Sheet sync layer — module-wise Save + Load.
-   v2: saaf error messages (kyun fail hua), Save ka real verify (saveId), aur ⚙️ URL (per-device Web App URL). */
+   v3: fixed Google Apps Script Web App URL — user ko URL manually enter karne ki zaroorat nahi. */
 const GOOGLE_SHEET_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwEyG1SPn8J9HoHKV1MtXIF2PLtdqM8wwYi0bYnM_jFt0y78ZuzbxRdU7My-PMCmqE/exec';
 const GOOGLE_SHEET_URL_KEY='htp7_google_sheet_url'; /* MODULE_KEYS me nahi hai, isliye Sheet me sync nahi hota */
 const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v3';
@@ -3153,11 +3341,41 @@ const SHEET_MSG={
 };
 function sheetErr(code){const e=new Error(SHEET_MSG[code]||code);e.code=code;return e;}
 function sheetUrl(){
-  try{const u=(localStorage.getItem(GOOGLE_SHEET_URL_KEY)||'').trim();if(SHEET_URL_RE.test(u))return u;}catch(e){}
   return GOOGLE_SHEET_WEB_APP_URL;
 }
 function sheetStatus(msg,ok){const el=document.getElementById('sheetSyncStatus');if(el){el.textContent=msg;el.title=msg;el.style.color=ok?'#1b7f3a':'#9a6700';}}
-function sheetCollectModules(){const data={};MODULE_KEYS.forEach(k=>{const v=localStorage.getItem(k);if(v!==null)data[k]=v;});return data;}
+function sheetCollectModules(){
+  const data={};
+  MODULE_KEYS.forEach(k=>{
+    const v=localStorage.getItem(k);
+    if(v!==null)data[k]=v;
+  });
+  // PM Plan is stored by financial year in separate localStorage keys.
+  // Collect all FY plans into the single PM Plan module so Google Sheet keeps
+  // one clean "PM Plan" tab instead of losing the active-year data.
+  try{
+    const rows=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i)||'';
+      if(!k.startsWith('htp7_pm_year_plan_v3_'))continue;
+      const fy=k.slice('htp7_pm_year_plan_v3_'.length);
+      let obj={};
+      try{obj=JSON.parse(localStorage.getItem(k)||'{}')||{};}catch(e){obj={};}
+      Object.keys(obj).forEach(planKey=>{
+        const rec=obj[planKey]||{};
+        const row={FY:fy,PlanKey:planKey,Frequency:rec.frequency||''};
+        const months=rec.months&&typeof rec.months==='object'?rec.months:{};
+        Object.keys(months).forEach(month=>{
+          const m=months[month]||{};
+          Object.keys(m).forEach(field=>row[month+' '+field]=m[field]);
+        });
+        rows.push(row);
+      });
+    }
+    if(rows.length)data.htp7_pm_plan_v1=JSON.stringify(rows);
+  }catch(e){console.warn('PM Plan sheet collection skipped',e);}
+  return data;
+}
 function sheetEnsureFrame(){let f=document.getElementById('googleSheetSaveFrame');if(!f){f=document.createElement('iframe');f.id='googleSheetSaveFrame';f.name='googleSheetSaveFrame';f.style.display='none';document.body.appendChild(f);}return f;}
 function sheetSleep(ms){return new Promise(r=>setTimeout(r,ms));}
 
@@ -3213,47 +3431,54 @@ async function sheetTestConnection(){
     throw new Error(d&&d.message?d.message:'Connection failed');
   }catch(e){sheetStatus('Connection failed — local data still working',false);alert('Google Sheet connection failed.\n\n'+(e.message||e));return false;}
 }
-async function sheetSaveNow(){
-  const data=sheetCollectModules();
-  const keys=Object.keys(data);
-  if(!keys.length){alert('Save karne ke liye abhi koi module data nahi hai.');return false;}
+async function sheetSaveNow(options){
+  options=options||{};
+  const silent=!!options.silent;
+  const dataToSave=sheetCollectModules();
+  const keys=Object.keys(dataToSave);
+  if(!keys.length){if(!silent)alert('Save karne ke liye abhi koi module data nahi hai.');return false;}
   const saveId=Date.now()+'-'+Math.floor(Math.random()*1000000);
-  sheetStatus('Saving module data to Google Sheet…',false);
+  sheetStatus(silent?'Auto-saving to Google Sheet…':'Saving module data to Google Sheet…',false);
   let form=null;
   try{
     const frame=sheetEnsureFrame();
     form=document.createElement('form');form.method='POST';form.action=sheetUrl();form.target=frame.name;form.enctype='application/x-www-form-urlencoded';form.style.display='none';
-    [['action','saveModules'],['saveId',saveId],['payload',JSON.stringify(data)]].forEach(([n,v])=>{const i=document.createElement('input');i.type='hidden';i.name=n;i.value=v;form.appendChild(i);});
+    [['action','saveModules'],['saveId',saveId],['payload',JSON.stringify(dataToSave)]].forEach(([n,v])=>{const i=document.createElement('input');i.type='hidden';i.name=n;i.value=v;form.appendChild(i);});
     document.body.appendChild(form);form.submit();
-    /* Sheet ne wahi saveId wapas dikhaya tabhi "saved" maanenge */
     let info=null,verified=false,unverifiable=false;
     const t0=Date.now();
-    await sheetSleep(2500);
-    while(Date.now()-t0<40000){
+    await sheetSleep(silent?1200:2500);
+    while(Date.now()-t0<(silent?12000:40000)){
       try{
-        info=await sheetCall('status',15000);
+        info=await sheetCall('status',silent?6000:15000);
         if(info&&info.status==='success'){
           if(info.lastSaveId===saveId){verified=true;break;}
           if(info.lastSaveId===undefined){unverifiable=true;break;}
         }else if(info){unverifiable=true;break;}
-      }catch(e){if(e&&(e.code==='LOGIN'||e.code==='DOGET'||e.code==='NOTFOUND'||e.code==='OFFLINE'))throw e;}
-      await sheetSleep(2500);
+      }catch(e){
+        if(e&&(e.code==='LOGIN'||e.code==='DOGET'||e.code==='NOTFOUND'||e.code==='OFFLINE'))throw e;
+      }
+      await sheetSleep(1500);
     }
     if(verified){
       localStorage.setItem(GOOGLE_SHEET_SYNC_KEY,new Date().toISOString());
-      sheetStatus('Saved to Google Sheet ✓',true);
-      alert('All module data Google Sheet me save ho gaya ('+(info.modules||keys.length)+' modules).');
+      sheetStatus('Google Sheet auto-updated ✓',true);
+      if(!silent)alert('All module data Google Sheet me save ho gaya ('+(info.modules||keys.length)+' modules).');
       return true;
     }
     if(unverifiable){
-      sheetStatus('Data bheja — confirm nahi ho saka',false);
-      alert('Data Google Sheet ko bhej diya gaya, lekin Sheet ne confirm nahi kiya (backend purana lagta hai).\n\nSheet me data check karo, ya naya Code.gs use karo.');
+      sheetStatus(silent?'Data sent to Google Sheet':'Data bheja — confirm nahi ho saka',false);
+      if(!silent)alert('Data Google Sheet ko bhej diya gaya, lekin Sheet ne confirm nahi kiya (backend purana lagta hai).\n\nSheet me data check karo, ya naya Code.gs use karo.');
       return false;
     }
     throw new Error('Sheet ne save confirm nahi kiya. Test Connection karke dobara Save karo.');
-  }catch(e){sheetStatus('Save failed — local data safe',false);alert('Google Sheet me save nahi hua:\n\n'+(e.message||e));return false;}
-  finally{try{if(form)form.remove();}catch(e){}}
+  }catch(e){
+    sheetStatus(silent?'Auto-sync failed — local data safe':'Save failed — local data safe',false);
+    if(!silent)alert('Google Sheet me save nahi hua:\n\n'+(e.message||e));
+    return false;
+  }finally{try{if(form)form.remove();}catch(e){}}
 }
+
 async function sheetLoadNow(){
   if(!confirm('Google Sheet se module data load karna hai? Isse app ke current module data replace honge.'))return false;
   sheetStatus('Loading module data from Google Sheet…',false);
@@ -3261,7 +3486,35 @@ async function sheetLoadNow(){
     const result=await sheetCall('loadModulesJSONP',45000);
     if(!result||result.status!=='success'||!result.modules)throw new Error(result&&result.message?result.message:'Sheet se module data nahi mila');
     let count=0;
+    // Rebuild financial-year PM Plan storage from the tabular Google Sheet data.
+    try{
+      const pm=result.modules['htp7_pm_plan_v1'];
+      if(pm&&pm.hasData&&Array.isArray(pm.data)){
+        const byFY={};
+        pm.data.forEach(row=>{
+          const fy=String(row.FY||'').trim();
+          const planKey=String(row.PlanKey||'').trim();
+          if(!fy||!planKey)return;
+          byFY[fy]=byFY[fy]||{};
+          const rec=byFY[fy][planKey]||{frequency:row.Frequency||'',months:{}};
+          if(row.Frequency!==undefined)rec.frequency=row.Frequency||'';
+          rec.months=rec.months||{};
+          Object.keys(row).forEach(k=>{
+            const m=k.match(/^(.+) (planned|actual|nextDate|tech|work|remark|pmCheckId)$/);
+            if(!m)return;
+            const month=m[1],field=m[2];
+            rec.months[month]=rec.months[month]||{};
+            rec.months[month][field]=row[k]??'';
+          });
+          byFY[fy][planKey]=rec;
+        });
+        Object.keys(byFY).forEach(fy=>localStorage.setItem('htp7_pm_year_plan_v3_'+fy,JSON.stringify(byFY[fy])));
+        localStorage.removeItem('htp7_pm_plan_v1');
+        count++;
+      }
+    }catch(e){console.warn('PM Plan sheet restore skipped',e);}
     MODULE_KEYS.forEach(k=>{
+      if(k==='htp7_pm_plan_v1')return;
       const m=result.modules[k];
       if(m&&m.hasData){
         let v=m.data;
@@ -3282,16 +3535,25 @@ async function sheetLoadNow(){
   }catch(e){sheetStatus('Load failed — local data unchanged',false);alert('Google Sheet se data load nahi hua:\n\n'+(e.message||e));return false;}
 }
 function sheetSetUrl(){
-  if(typeof currentAppRole!=='undefined'&&currentAppRole!=='admin'){alert('Admin access required.\n\nUpar role me Admin select karo (PIN ke saath), phir ⚙️ URL dabao.');return;}
-  const v=prompt('Google Apps Script Web App URL paste karo (…/exec).\n\nKhali chhod ke OK dabao = default URL par wapas.',sheetUrl());
-  if(v===null)return;
-  const t=v.trim();
-  if(t===''){try{localStorage.removeItem(GOOGLE_SHEET_URL_KEY);}catch(e){}sheetStatus('Default URL wapas set ho gaya',true);return;}
-  if(!SHEET_URL_RE.test(t)){alert('URL galat hai.\n\nYe "https://script.google.com/macros/s/…/exec" jaisa hona chahiye (Deploy → Web app wala URL, /dev wala nahi).');return;}
-  try{localStorage.setItem(GOOGLE_SHEET_URL_KEY,t);}catch(e){alert('URL save nahi ho paya: '+e.message);return;}
-  sheetStatus('Naya URL save ho gaya — ab Test Connection dabao',true);
+  alert('Google Sheet connection URL app me already set hai. Aapko URL manually add karne ki zaroorat nahi hai.');
 }
 window.sheetTestConnection=sheetTestConnection;window.sheetSaveNow=sheetSaveNow;window.sheetLoadNow=sheetLoadNow;window.sheetSetUrl=sheetSetUrl;
+/* Also sync modules that use their own storage helpers instead of persist(). */
+(function installModuleStorageSync(){
+  try{
+    const nativeSetItem=localStorage.setItem.bind(localStorage);
+    const modulePrefixes=['htp7_pm_year_plan_v3_'];
+    const moduleKeys=new Set(MODULE_KEYS);
+    localStorage.setItem=function(k,v){
+      nativeSetItem(k,v);
+      if(k===GOOGLE_SHEET_SYNC_KEY || k===GOOGLE_SHEET_URL_KEY)return;
+      if(moduleKeys.has(k) || modulePrefixes.some(p=>String(k).startsWith(p))) scheduleSheetAutoSave();
+    };
+  }catch(e){console.warn('Module storage sync hook skipped',e);}
+})();
+/* Automatic Google Sheet sync: every local data change is pushed after a short debounce. */
+window.addEventListener('online',()=>{if(_sheetAutoSavePending)scheduleSheetAutoSave();});
+setTimeout(()=>{try{if(localStorage.getItem(GOOGLE_SHEET_SYNC_KEY))sheetStatus('Auto-sync ready ✓',true);}catch(e){}},1200);
 </script>
 <script>
 /* PWA: service worker + 📲 Install App button */
