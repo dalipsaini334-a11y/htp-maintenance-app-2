@@ -3554,6 +3554,31 @@ window.sheetTestConnection=sheetTestConnection;window.sheetSaveNow=sheetSaveNow;
 /* Automatic Google Sheet sync: every local data change is pushed after a short debounce. */
 window.addEventListener('online',()=>{if(_sheetAutoSavePending)scheduleSheetAutoSave();});
 setTimeout(()=>{try{if(localStorage.getItem(GOOGLE_SHEET_SYNC_KEY))sheetStatus('Auto-sync ready ✓',true);}catch(e){}},1200);
+setTimeout(()=>{
+  async function autoRemoteSync(){
+    try{
+      const st=await sheetCall('status',5000);
+      if(!st || !st.lastUpdated) return;
+      const lastSeen=localStorage.getItem('htp7_last_remote_update')||'';
+      if(st.lastUpdated!==lastSeen){
+        localStorage.setItem('htp7_last_remote_update',st.lastUpdated);
+        const result=await sheetCall('loadModulesJSONP',15000);
+        if(result && result.status==='success' && result.modules){
+          Object.keys(result.modules).forEach(k=>{
+            const m=result.modules[k];
+            if(m && m.hasData){
+              localStorage.setItem(k, typeof m.data==='string' ? m.data : JSON.stringify(m.data));
+            }
+          });
+          sheetStatus('Auto synced ✓',true);
+          location.reload();
+        }
+      }
+    }catch(e){}
+  }
+  setInterval(autoRemoteSync,10000);
+},2000);
+
 </script>
 <script>
 /* PWA: service worker + 📲 Install App button */
