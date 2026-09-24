@@ -1,8 +1,11 @@
 {
   "name": "HTP Maintenance App",
   "short_name": "HTP Maintenance",
+  "description": "Heat Treatment Plant Maintenance Management System",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#0b4f9c",
   "icons": [

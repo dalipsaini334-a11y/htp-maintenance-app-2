@@ -1,12 +1,24 @@
-# HTP MMS Maintenance App — GitHub Pages
+# HTP MMS Maintenance App — GitHub Pages Ready
 
-Upload all files in this folder to the root of your GitHub repository.
+## Upload
+Upload the **contents of this folder** to the root of your GitHub repository:
 
-1. Repository: `HTP-MMS-Maintenance`
-2. Upload `index.html`, `manifest.json`, `service-worker.js`, `.nojekyll`, and the `icons` folder.
-3. GitHub: **Settings → Pages**
-4. Source: **Deploy from a branch**
-5. Branch: **main** / **(root)**
-6. Save, then open **Visit site**.
+- `index.html` — complete fixed HTP MMS app
+- `manifest.json` — PWA configuration
+- `service-worker.js` — PWA/offline shell
+- `.nojekyll`
+- `icons/icon-192.png`
+- `icons/icon-512.png`
 
-The app uses the existing Google Apps Script Web App as its backend and Google Sheets as its data store.
+## GitHub Pages
+1. Open the repository.
+2. Go to **Settings → Pages**.
+3. Source: **Deploy from a branch**.
+4. Branch: **main** and folder **/(root)**.
+5. Save.
+6. Open **Visit site** after GitHub finishes publishing.
+
+## Important
+The Google Apps Script backend is NOT included in this frontend package. Keep the deployed Apps Script Web App URL configured in `index.html`.
+
+For Android/PWA installation, open the **published GitHub Pages HTTPS URL** in Chrome. Do not open the GitHub `blob/main/index.html` URL.
