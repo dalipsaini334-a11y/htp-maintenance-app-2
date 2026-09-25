@@ -3451,8 +3451,13 @@ async function sheetSaveNow(showStatus=true){
     // Wait briefly, then read the backend again. This turns the old
     // fire-and-forget save into a real save verification.
     await new Promise(r=>setTimeout(r,1800));
-    const verify=await sheetFetchJSON('loadModules',20000);
-    if(!verify||verify.status!=='success'||!verify.modules) throw new Error('Save verification failed');
+    let verify=null,lastVerifyErr=null;
+    for(let attempt=1;attempt<=4;attempt++){
+      try{verify=await sheetFetchJSON('loadModules',25000);if(verify&&verify.status==='success'&&verify.modules)break;lastVerifyErr=new Error(verify?.message||'Backend response invalid');}
+      catch(err){lastVerifyErr=err}
+      await new Promise(r=>setTimeout(r,1200));
+    }
+    if(!verify||verify.status!=='success'||!verify.modules) throw new Error('Save verification failed: '+(lastVerifyErr?.message||'backend did not confirm'));
     sheetSetStatusSafe('☁️ Google Sheet Saved & Verified ✓',true);
     return true;
   }catch(e){
