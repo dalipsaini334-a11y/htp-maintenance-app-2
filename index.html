@@ -3310,10 +3310,10 @@ function pclPrint(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pclInit);else pclInit();
 </script>
 <script id="googleSheetSyncLayer">
-/* ================= GOOGLE SHEET REAL-TIME AUTO SYNC ================= */
+/* ================= GOOGLE SHEET ROBUST SYNC ================= */
 const GOOGLE_SHEET_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwEyG1SPn8J9HoHKV1MtXIF2PLtdqM8wwYi0bYnM_jFt0y78ZuzbxRdU7My-PMCmqE/exec';
 const GOOGLE_SHEET_URL_KEY='htp7_google_sheet_url';
-const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v5';
+const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v6';
 const MODULE_KEYS=[
   'htp7_pf','htp7_pc','htp7_dg','htp7_mr','htp7_bd','htp7_pm',
   'htp7_machine_master_editable_v1','htp7_mh','htp7_spare_inventory_v1',
@@ -3321,445 +3321,225 @@ const MODULE_KEYS=[
   'htp7_pm_machine_checklist_v1','htp7_power_cost_lifetime_v2',
   'htp7_sat_records_v1','htp7_financial_years_v1'
 ];
-
-
-function sheetUrl(){
-  // Keep the deployed Apps Script URL as the single source of truth.
-  return GOOGLE_SHEET_WEB_APP_URL;
+function sheetUrl(){ return GOOGLE_SHEET_WEB_APP_URL; }
+function sheetSetStatusSafe(msg,ok){
+  try{ if(typeof sheetStatus==='function') sheetStatus(msg,ok); else {
+    const el=document.getElementById('sheetSyncStatus');
+    if(el){el.textContent=msg;el.style.color=ok?'#1b7f3a':'#9a6700';}
+  }}catch(e){}
 }
+let sheetLoadInProgress=false, sheetSaveInProgress=false, sheetSyncApplying=false;
+let sheetLastSaveAt=0;
 
-let sheetLoadInProgress = false;
-let sheetSaveInProgress = false;
-let sheetSyncApplying = false;
-let sheetLastLoadedAt = 0;
-let sheetLastSaveAt = 0;
-
-function sheetEndpoint(action){
-  const base = sheetUrl();
-  return base + (base.includes('?') ? '&' : '?') +
-    'action=' + encodeURIComponent(action) + '&ts=' + Date.now();
-}
-
-function sheetSetStatusSafe(msg, ok){
-  try { sheetStatus(msg, ok); } catch(e) {}
-}
-
-async function sheetFetchJSON(action, timeoutMs = 30000){
-  // Primary path: normal JSON fetch.
-  // Fallback path: JSONP, which works even when the Apps Script response is
-  // blocked by browser CORS/redirect handling.
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-  try{
-    try{
-      const response = await fetch(sheetEndpoint(action), {
-        method: 'GET',
-        cache: 'no-store',
-        credentials: 'omit',
-        redirect: 'follow',
-        signal: controller.signal,
-        headers: { 'Accept': 'application/json' }
-      });
-
-      const raw = await response.text();
-      if(!response.ok) throw new Error('HTTP ' + response.status + ' ' + response.statusText);
-
-      let data;
-      try{ data = JSON.parse(raw); }
-      catch(parseErr){ throw new Error('Apps Script returned non-JSON data'); }
-
-      if(!data || typeof data !== 'object') throw new Error('Invalid response from Google Sheet backend');
-      return data;
-    }catch(fetchErr){
-      console.warn('[Google Sheet] JSON fetch failed, trying JSONP fallback:', fetchErr);
-    }
-  }finally{
-    clearTimeout(timer);
-  }
-
-  return await new Promise((resolve, reject) => {
-    const callbackName = '__htp7SheetCB_' + Date.now() + '_' + Math.random().toString(36).slice(2);
-    const script = document.createElement('script');
-    const cleanup = () => {
-      try{ delete window[callbackName]; }catch(e){ window[callbackName] = undefined; }
-      try{ script.remove(); }catch(e){}
-      clearTimeout(timeout);
-    };
-    const timeout = setTimeout(() => {
-      cleanup();
-      reject(new Error('Google Sheet JSONP timeout'));
-    }, timeoutMs);
-
-    window[callbackName] = data => {
-      cleanup();
-      if(!data || typeof data !== 'object'){
-        reject(new Error('Invalid JSONP response from Google Sheet backend'));
-        return;
-      }
-      resolve(data);
-    };
-
-    script.onerror = () => {
-      cleanup();
-      reject(new Error('Google Sheet JSONP request failed'));
-    };
-
-    script.src = sheetUrl() +
-      (sheetUrl().includes('?') ? '&' : '?') +
-      'action=' + encodeURIComponent(action) +
-      '&callback=' + encodeURIComponent(callbackName) +
-      '&ts=' + Date.now();
-
-    document.head.appendChild(script);
+function sheetJsonp(action,timeoutMs=30000){
+  return new Promise((resolve,reject)=>{
+    const cb='__htp7_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+    const s=document.createElement('script');
+    let done=false;
+    const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}try{s.remove()}catch(e){}fn(v)};
+    const timer=setTimeout(()=>finish(reject,new Error('Google Sheet request timeout')),timeoutMs);
+    window[cb]=d=>finish(resolve,d);
+    s.onerror=()=>finish(reject,new Error('Google Sheet request failed'));
+    s.src=sheetUrl()+'?action='+encodeURIComponent(action)+'&callback='+encodeURIComponent(cb)+'&ts='+Date.now();
+    document.head.appendChild(s);
   });
 }
-
-async function sheetTestConnection(){
-  sheetSetStatusSafe('🔄 Google Sheet connection test ho raha hai...', false);
-
+async function sheetFetchJSON(action,timeoutMs=30000){
+  // Apps Script web apps commonly redirect their JSON response. JSONP avoids
+  // browser CORS/redirect issues, so it is the primary GET path.
   try{
-    const result = await sheetFetchJSON('ping', 20000);
-
-    if(result && result.status === 'success'){
-      sheetSetStatusSafe('🟢 Google Sheet Connected ✓', true);
+    const d=await sheetJsonp(action,timeoutMs);
+    if(d&&typeof d==='object') return d;
+    throw new Error('Invalid JSONP response');
+  }catch(jsonpErr){
+    console.warn('[Google Sheet] JSONP failed, trying normal fetch:',jsonpErr);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+      const r=await fetch(sheetUrl()+'?action='+encodeURIComponent(action)+'&ts='+Date.now(),{
+        method:'GET',cache:'no-store',credentials:'omit',redirect:'follow',
+        signal:controller.signal,headers:{'Accept':'application/json'}
+      });
+      const raw=await r.text();
+      if(!r.ok) throw new Error('HTTP '+r.status+' '+r.statusText);
+      const d=JSON.parse(raw);
+      if(!d||typeof d!=='object') throw new Error('Invalid backend response');
+      return d;
+    }finally{clearTimeout(timer);}
+  }
+}
+async function sheetTestConnection(){
+  sheetSetStatusSafe('🔄 Google Sheet connection test...',false);
+  try{
+    const d=await sheetFetchJSON('ping',20000);
+    if(d&&d.status==='success'){
+      sheetSetStatusSafe('🟢 Google Sheet Connected ✓',true);
       alert('Google Sheet connection successful ✓');
       return true;
     }
-
-    throw new Error(result?.message || 'Ping response invalid');
+    throw new Error(d?.message||'Ping response invalid');
   }catch(e){
-    console.error('[Google Sheet] Connection test failed:', e);
-    const msg = e?.message || String(e);
-    sheetSetStatusSafe('🔴 Google Sheet Connection Failed', false);
-    alert('Google Sheet connection failed.\n\nReason: ' + msg + '\n\nApps Script Web App deployment aur access setting check karein.');
+    console.error('[Google Sheet] ping failed',e);
+    sheetSetStatusSafe('🔴 Google Sheet Connection Failed',false);
+    alert('Google Sheet connection failed.\n\nReason: '+(e?.message||e)+'\n\nAgar ye error repeat ho, Apps Script Web App deployment ko latest backend code par update karna hoga.');
     return false;
   }
 }
-
-async function sheetLoadNow(silent = false){
-  if(sheetLoadInProgress) return false;
-  if(sheetSaveInProgress) return false;
-
-  if(!silent){
-    if(!confirm('Google Sheet se naya data load karna chahte hain?')) return false;
-  }
-
-  sheetLoadInProgress = true;
-  sheetSetStatusSafe('📥 Google Sheet se latest data load ho raha hai...', false);
-
-  try{
-    const result = await sheetFetchJSON('loadModules', 30000);
-
-    if(!result || result.status !== 'success' || !result.modules){
-      throw new Error(result?.message || 'Module data receive nahi hua');
-    }
-
-    let loadedCount = 0;
-    let changedCount = 0;
-
-    sheetSyncApplying = true;
-
-    try{
-      // Restore every module exactly by its existing localStorage key.
-      Object.entries(result.modules).forEach(([key, info]) => {
-        if(!info || !info.hasData) return;
-        if(info.data === null || typeof info.data === 'undefined') return;
-
-        const fresh = typeof info.data === 'string'
-          ? info.data
-          : JSON.stringify(info.data);
-
-        loadedCount++;
-
-        if(localStorage.getItem(key) !== fresh){
-          localStorage.setItem(key, fresh);
-          changedCount++;
-        }
-      });
-
-      // Restore PM yearly plan data from the flattened PM Plan sheet.
-      const pm = result.modules['htp7_pm_plan_v1'];
-      if(pm && pm.hasData && Array.isArray(pm.data)){
-        const byFY = {};
-
-        pm.data.forEach(row => {
-          const fy = String(row?.FY || '').trim();
-          const planKey = String(row?.PlanKey || '').trim();
-          if(!fy || !planKey) return;
-
-          byFY[fy] = byFY[fy] || {};
-          const rec = byFY[fy][planKey] || {
-            frequency: row?.Frequency || '',
-            months: {}
-          };
-
-          if(row?.Frequency !== undefined) rec.frequency = row.Frequency || '';
-          rec.months = rec.months || {};
-
-          Object.keys(row).forEach(k => {
-            const m = k.match(/^(.+) (planned|actual|nextDate|tech|work|remark|pmCheckId)$/);
-            if(!m) return;
-
-            const month = m[1];
-            const field = m[2];
-
-            rec.months[month] = rec.months[month] || {};
-            rec.months[month][field] = row[k] ?? '';
-          });
-
-          byFY[fy][planKey] = rec;
-        });
-
-        Object.keys(byFY).forEach(fy => {
-          const kName = 'htp7_pm_year_plan_v3_' + fy;
-          const fresh = JSON.stringify(byFY[fy]);
-
-          if(localStorage.getItem(kName) !== fresh){
-            localStorage.setItem(kName, fresh);
-            changedCount++;
-          }
-        });
-      }
-
-      localStorage.setItem('htp7_google_sheet_sync_v1', new Date().toISOString());
-    }finally{
-      sheetSyncApplying = false;
-    }
-
-    sheetLastLoadedAt = Date.now();
-
-    // Rehydrate the app's in-memory state after localStorage restore.
-    try{
-      if(typeof data !== 'undefined' && typeof KEY !== 'undefined' && typeof load === 'function'){
-        Object.keys(KEY).forEach(k => {
-          try { data[k] = load(k); } catch(e) {}
-        });
-      }
-    }catch(e){}
-
-    // Refresh the visible UI without changing module definitions.
-    try{
-      if(typeof renderAll === 'function') renderAll();
-    }catch(e){}
-
-    try{
-      if(typeof renderDashboard === 'function') renderDashboard();
-    }catch(e){}
-
-    try{
-      if(typeof refreshDashboard === 'function') refreshDashboard();
-    }catch(e){}
-
-    sheetSetStatusSafe(
-      changedCount
-        ? `Google Sheet Synced ✓ (${changedCount} changes)`
-        : `Google Sheet Synced ✓ (${loadedCount} modules)`,
-      true
-    );
-
-    return true;
-
-  }catch(e){
-    const msg = e?.name === 'AbortError'
-      ? 'Google Sheet load timeout'
-      : (e?.message || String(e));
-
-    console.error('[Google Sheet] Load failed:', e);
-    sheetSetStatusSafe('⚠️ Google Sheet fetch failed — Local data active', false);
-
-    if(!silent){
-      alert('Google Sheet se data fetch nahi ho pa raha.\n\nReason: ' + msg +
-            '\n\nLocal data safe hai. Apps Script deployment/URL aur access setting check karein.');
-    }
-
-    return false;
-  }finally{
-    sheetLoadInProgress = false;
-  }
-}
-
 function sheetCollectModules(){
-  const payload = {};
-
-  try{
-    MODULE_KEYS.forEach(k => {
-      const raw = localStorage.getItem(k);
-      if(raw !== null && raw !== ''){
-        try{
-          payload[k] = JSON.parse(raw);
-        }catch(e){
-          payload[k] = raw;
-        }
-      }
-    });
-
-    // Keep PM yearly plans in the same payload flow used by the existing app.
-    const pmRows = [];
-    for(let i=0; i<localStorage.length; i++){
-      const key = localStorage.key(i);
-      if(!key || !key.startsWith('htp7_pm_year_plan_v3_')) continue;
-
-      const fy = key.replace('htp7_pm_year_plan_v3_', '');
-      const raw = localStorage.getItem(key);
-      if(!raw) continue;
-
-      let obj;
-      try{ obj = JSON.parse(raw); }catch(e){ continue; }
-
-      Object.entries(obj || {}).forEach(([planKey, rec]) => {
-        const row = {
-          FY: fy,
-          PlanKey: planKey,
-          Frequency: rec?.frequency || ''
-        };
-
-        Object.entries(rec?.months || {}).forEach(([month, vals]) => {
-          ['planned','actual','nextDate','tech','work','remark','pmCheckId'].forEach(field => {
-            if(vals && vals[field] !== undefined){
-              row[month + ' ' + field] = vals[field];
-            }
-          });
-        });
-
-        pmRows.push(row);
-      });
+  const payload={};
+  MODULE_KEYS.forEach(k=>{
+    const raw=localStorage.getItem(k);
+    if(raw!==null&&raw!==''){
+      try{payload[k]=JSON.parse(raw)}catch(e){payload[k]=raw}
     }
-
-    if(pmRows.length) payload['htp7_pm_plan_v1'] = pmRows;
-  }catch(e){
-    console.error('[Google Sheet] Collect failed:', e);
+  });
+  const pmRows=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i)||'';
+    if(!key.startsWith('htp7_pm_year_plan_v3_')) continue;
+    const fy=key.slice('htp7_pm_year_plan_v3_'.length);
+    let obj={};try{obj=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+    Object.entries(obj).forEach(([planKey,rec])=>{
+      const row={FY:fy,PlanKey:planKey,Frequency:rec?.frequency||''};
+      Object.entries(rec?.months||{}).forEach(([month,vals])=>{
+        ['planned','actual','nextDate','tech','work','remark','pmCheckId'].forEach(field=>{
+          if(vals&&vals[field]!==undefined) row[month+' '+field]=vals[field];
+        });
+      });
+      pmRows.push(row);
+    });
   }
-
+  if(pmRows.length) payload.htp7_pm_plan_v1=pmRows;
   return payload;
 }
-
 function sheetEnsureFrame(){
-  let frame = document.getElementById('htp7_google_sheet_save_frame');
-  if(frame) return frame;
-
-  frame = document.createElement('iframe');
-  frame.id = 'htp7_google_sheet_save_frame';
-  frame.name = 'htp7_google_sheet_save_frame';
-  frame.style.display = 'none';
-  document.body.appendChild(frame);
-  return frame;
+  let f=document.getElementById('htp7_google_sheet_save_frame');
+  if(!f){
+    f=document.createElement('iframe');f.id='htp7_google_sheet_save_frame';
+    f.name='htp7_google_sheet_save_frame';f.style.display='none';
+    document.body.appendChild(f);
+  }
+  return f;
 }
-
-async function sheetSaveNow(showStatus = true){
-  if(sheetSaveInProgress) return false;
-  if(sheetSyncApplying) return false;
-
-  sheetSaveInProgress = true;
-
+async function sheetSaveNow(showStatus=true){
+  // Backward compatibility with older calls such as sheetSaveNow({silent:true}).
+  if(typeof showStatus==='object') showStatus=!showStatus.silent;
+  if(sheetSaveInProgress||sheetSyncApplying)return false;
+  sheetSaveInProgress=true;
   try{
-    if(showStatus) sheetSetStatusSafe('📤 Google Sheet me data save ho raha hai...', false);
-
-    const payload = sheetCollectModules();
-    const saveId = 'save_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
-
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = sheetUrl();
-    form.target = 'htp7_google_sheet_save_frame';
-    form.style.display = 'none';
-
-    const addField = (name, value) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    };
-
-    addField('action', 'saveModules');
-    addField('saveId', saveId);
-    addField('payload', JSON.stringify(payload));
-
-    document.body.appendChild(form);
+    const payload=sheetCollectModules();
+    const saveId='save_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+    sheetSetStatusSafe('📤 Google Sheet me data save ho raha hai...',false);
     sheetEnsureFrame();
-    form.submit();
-    form.remove();
-
-    sheetLastSaveAt = Date.now();
-    localStorage.setItem('htp7_google_sheet_last_save_v1', new Date(sheetLastSaveAt).toISOString());
-
-    // The Apps Script POST is intentionally fire-and-forget because the browser
-    // cannot reliably read a cross-origin iframe response. Do not show a false
-    // "verified" message; show that the save request was sent.
-    if(showStatus){
-      sheetSetStatusSafe('📤 Google Sheet save request sent ✓', true);
-    }
-
+    const form=document.createElement('form');
+    form.method='POST';form.action=sheetUrl();form.target='htp7_google_sheet_save_frame';
+    form.style.display='none';
+    const add=(n,v)=>{const i=document.createElement('input');i.type='hidden';i.name=n;i.value=v;form.appendChild(i)};
+    add('action','saveModules');add('saveId',saveId);add('payload',JSON.stringify(payload));
+    document.body.appendChild(form);form.submit();form.remove();
+    sheetLastSaveAt=Date.now();
+    localStorage.setItem('htp7_google_sheet_last_save_v2',new Date(sheetLastSaveAt).toISOString());
+    // Wait briefly, then read the backend again. This turns the old
+    // fire-and-forget save into a real save verification.
+    await new Promise(r=>setTimeout(r,1800));
+    const verify=await sheetFetchJSON('loadModules',20000);
+    if(!verify||verify.status!=='success'||!verify.modules) throw new Error('Save verification failed');
+    sheetSetStatusSafe('☁️ Google Sheet Saved & Verified ✓',true);
     return true;
-
   }catch(e){
-    console.error('[Google Sheet] Save failed:', e);
-    sheetSetStatusSafe('⚠️ Google Sheet save failed — Local data safe', false);
+    console.error('[Google Sheet] save failed',e);
+    sheetSetStatusSafe('⚠️ Google Sheet save verify failed — Local data safe',false);
+    if(showStatus) alert('Google Sheet save verify nahi ho paaya.\n\nReason: '+(e?.message||e));
     return false;
-  }finally{
-    sheetSaveInProgress = false;
-  }
+  }finally{sheetSaveInProgress=false;}
 }
-
-// Existing app may already call this function. Keep the name available.
-function sheetCall(action, timeoutMs){
-  return sheetFetchJSON(action === 'loadModulesJSONP' ? 'loadModules' : action, timeoutMs || 30000);
-}
-
-// Autosave: never save while a Sheet download is being applied.
-function triggerImmediateAutoSave(){
-  if(sheetSyncApplying || sheetLoadInProgress) return;
-  if(typeof window.__htp7AutoSaveTimer !== 'undefined'){
-    clearTimeout(window.__htp7AutoSaveTimer);
-  }
-  window.__htp7AutoSaveTimer = setTimeout(() => {
-    sheetSaveNow(true);
-  }, 700);
-}
-
-// Intercept module localStorage writes while preserving the original behavior.
-(function installSheetStorageHook(){
-  if(window.__htp7SheetStorageHookInstalled) return;
-  window.__htp7SheetStorageHookInstalled = true;
-
-  const originalSetItem = Storage.prototype.setItem;
-  Storage.prototype.setItem = function(key, value){
-    const result = originalSetItem.call(this, key, value);
-
+async function sheetLoadNow(silent=false){
+  if(sheetLoadInProgress||sheetSaveInProgress)return false;
+  if(!silent&&!confirm('Google Sheet se latest data load karna chahte hain?'))return false;
+  sheetLoadInProgress=true;
+  sheetSetStatusSafe('📥 Google Sheet se latest data load ho raha hai...',false);
+  try{
+    const result=await sheetFetchJSON('loadModules',30000);
+    if(!result||result.status!=='success'||!result.modules)throw new Error(result?.message||'Module data receive nahi hua');
+    let loaded=0,changed=0;
+    sheetSyncApplying=true;
     try{
-      if(
-        this === localStorage &&
-        !sheetSyncApplying &&
-        !sheetLoadInProgress &&
-        !sheetSaveInProgress &&
-        MODULE_KEYS.includes(String(key))
-      ){
-        triggerImmediateAutoSave();
+      Object.entries(result.modules).forEach(([key,info])=>{
+        if(!info||!info.hasData||info.data===null||info.data===undefined)return;
+        const fresh=typeof info.data==='string'?info.data:JSON.stringify(info.data);
+        loaded++;
+        if(localStorage.getItem(key)!==fresh){localStorage.setItem(key,fresh);changed++}
+      });
+      const pm=result.modules.htp7_pm_plan_v1;
+      if(pm&&pm.hasData&&Array.isArray(pm.data)){
+        const byFY={};
+        pm.data.forEach(row=>{
+          const fy=String(row?.FY||'').trim(),planKey=String(row?.PlanKey||'').trim();
+          if(!fy||!planKey)return;
+          byFY[fy]=byFY[fy]||{};
+          const rec=byFY[fy][planKey]||{frequency:row?.Frequency||'',months:{}};
+          if(row?.Frequency!==undefined)rec.frequency=row.Frequency||'';
+          Object.keys(row).forEach(k=>{
+            const m=k.match(/^(.+) (planned|actual|nextDate|tech|work|remark|pmCheckId)$/);
+            if(!m)return;
+            const month=m[1],field=m[2];
+            rec.months[month]=rec.months[month]||{};
+            rec.months[month][field]=row[k]??'';
+          });
+          byFY[fy][planKey]=rec;
+        });
+        Object.entries(byFY).forEach(([fy,obj])=>{
+          const k='htp7_pm_year_plan_v3_'+fy,fresh=JSON.stringify(obj);
+          if(localStorage.getItem(k)!==fresh){localStorage.setItem(k,fresh);changed++}
+        });
       }
+      localStorage.setItem('htp7_google_sheet_sync_v2',new Date().toISOString());
+    }finally{sheetSyncApplying=false}
+    try{
+      if(typeof data!=='undefined'&&typeof KEY!=='undefined'&&typeof load==='function'){
+        Object.keys(KEY).forEach(k=>{try{data[k]=load(k)}catch(e){}});
+      }
+      if(typeof renderAll==='function')renderAll();
+      if(typeof renderDashboard==='function')renderDashboard();
+      if(typeof refreshDashboard==='function')refreshDashboard();
     }catch(e){}
-
+    sheetSetStatusSafe(changed?('Google Sheet Synced ✓ ('+changed+' changes)'):('Google Sheet Synced ✓ ('+loaded+' modules)'),true);
+    return true;
+  }catch(e){
+    console.error('[Google Sheet] load failed',e);
+    sheetSetStatusSafe('⚠️ Google Sheet fetch failed — Local data active',false);
+    if(!silent)alert('Google Sheet se data fetch nahi ho pa raha.\n\nReason: '+(e?.message||e));
+    return false;
+  }finally{sheetLoadInProgress=false}
+}
+function sheetCall(action,timeoutMs){return sheetFetchJSON(action==='loadModulesJSONP'?'loadModules':action,timeoutMs||30000)}
+function triggerImmediateAutoSave(){
+  if(sheetSyncApplying||sheetLoadInProgress||sheetSaveInProgress)return;
+  clearTimeout(window.__htp7AutoSaveTimer);
+  window.__htp7AutoSaveTimer=setTimeout(()=>sheetSaveNow(true),900);
+}
+(function installSheetStorageHook(){
+  if(window.__htp7SheetStorageHookInstalled)return;
+  window.__htp7SheetStorageHookInstalled=true;
+  const original=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    const result=original.call(this,key,value);
+    try{
+      if(this===localStorage&&!sheetSyncApplying&&!sheetLoadInProgress&&!sheetSaveInProgress&&MODULE_KEYS.includes(String(key)))triggerImmediateAutoSave();
+    }catch(e){}
     return result;
   };
 })();
-
-// Background refresh: do not compete with an active load/save.
 function sheetStartAutoRefresh(){
-  if(window.__htp7SheetRefreshTimer) return;
-
-  window.__htp7SheetRefreshTimer = setInterval(() => {
-    if(document.hidden) return;
-    if(sheetLoadInProgress || sheetSaveInProgress || sheetSyncApplying) return;
-
-    // Give a just-completed local save a short settling period.
-    if(Date.now() - sheetLastSaveAt < 5000) return;
-
+  if(window.__htp7SheetRefreshTimer)return;
+  window.__htp7SheetRefreshTimer=setInterval(()=>{
+    if(document.hidden||sheetLoadInProgress||sheetSaveInProgress||sheetSyncApplying)return;
+    if(Date.now()-sheetLastSaveAt<5000)return;
     sheetLoadNow(true);
-  }, 15000);
+  },30000);
 }
-
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => sheetLoadNow(true), 250);
+window.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>sheetLoadNow(true),500);
   sheetStartAutoRefresh();
 });
 </script><script>
