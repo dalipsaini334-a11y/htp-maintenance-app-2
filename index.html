@@ -935,7 +935,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <button class="tab" onclick="showTab('pc',this)">🔌 Power Cut Detail</button>
 <button class="tab" onclick="showTab('dg',this)">🛢️ DG Daily Reading</button>
 <button class="tab" onclick="showTab('mr',this)">🛠️ Maintenance Request Slip</button><button class="tab" onclick="showTab('bd',this)">🔧 Breakdown Data</button><button class="tab" onclick="showTab('mttr',this)">📊 Breakdown MTTR</button><button class="tab" onclick="showTab('pm',this)">🧰 Preventive Maintenance</button><button class="tab" onclick="showTab('pmPlan',this)">🗓️ PM Plan</button><button class="tab" onclick="showTab('mm',this)">📋 Machine Master</button><button class="tab" onclick="showTab('mh',this)">📜 Machine History Card</button><button class="tab" onclick="showTab('spare',this)">🧰 Spare Inventory</button>
-<button class="tab" onclick="showTab('powerCostLifetime',this)">⚡ Power Cost / HPSEBL</button><button class="tab" onclick="showTab('sat',this)">🌡️ SAT</button></div>
+<button class="tab" onclick="showTab('powerCostLifetime',this)">⚡ Power Cost / HPSEBL</button><button class="tab" onclick="showTab('machineEnergy',this)">⚙️ Machine Energy &amp; Hour</button><button class="tab" onclick="showTab('sat',this)">🌡️ SAT</button></div>
 <style id="spare-add-remove-css">
 .spare-editor-card{margin-top:12px;background:#f8fbfd;border:1px solid #d8e3ea}.spare-editor-form{margin-top:8px}.spare-editor-card.hidden{display:none}.spare-selected td{outline:2px solid #0b5cab;outline-offset:-2px;background:#eef7ff!important}.spare-select-btn{min-width:62px}.spare-custom-badge{display:inline-block;margin-left:5px;padding:2px 6px;border-radius:10px;background:#e9f7ef;color:#176b3a;font-size:10px;font-weight:700}
 </style>
@@ -2004,7 +2004,148 @@ function printReadingLog(type){
 <script>
 
 
-</body></html>`);
+
+<style id="machine-energy-module-style">
+#machineEnergy .energy-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+#machineEnergy .energy-kpi{background:#fff;border:1px solid #d9e5ef;border-radius:10px;padding:12px}
+#machineEnergy .energy-kpi b{display:block;font-size:23px;color:#0878e8;margin-top:4px}
+#machineEnergy .energy-kpi span{font-size:10px;color:#64748b;font-weight:800;text-transform:uppercase}
+#machineEnergy .energy-entry{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px}
+#machineEnergy .energy-entry .field{padding:10px;border:1px solid #e1e8ee;border-radius:9px;background:#fafdff}
+#machineEnergy .energy-entry .wide{grid-column:span 2}
+#machineEnergy .energy-table{min-width:1200px}
+#machineEnergy .energy-table input{min-width:95px;padding:6px;border:1px solid #cbd8e5;border-radius:6px}
+#machineEnergy .energy-table .calc{background:#f1f8ff;font-weight:700}
+#machineEnergy .energy-note{font-size:11px;color:#5b6f80;background:#f4f8fb;border-left:4px solid #0b8fd8;padding:9px 11px;border-radius:7px;margin:8px 0 12px}
+@media(max-width:900px){#machineEnergy .energy-kpis{grid-template-columns:repeat(2,1fr)}#machineEnergy .energy-entry{grid-template-columns:repeat(2,minmax(0,1fr))}#machineEnergy .energy-entry .wide{grid-column:1/-1}}
+@media(max-width:600px){#machineEnergy .energy-entry{grid-template-columns:1fr}#machineEnergy .energy-entry .wide{grid-column:auto}}
+</style>
+<section class="panel" id="machineEnergy">
+<div class="card">
+<div class="head">MACHINE ENERGY &amp; RUNNING HOUR REGISTER</div>
+<div class="head2">Daily KWH / Run Hour / Load Hour Recording</div>
+<div class="energy-note">
+Excel reference format ke same field sequence par module banaya gaya hai. Uploaded Excel ka <b>existing data import nahi kiya gaya</b>; module blank se start hoga.
+Calculation: Unit Consumption/Day = current KWH − previous KWH (same machine); Unit Consumption/Hour = Unit Consumption/Day ÷ 24; Total Run Hour = current Run Hour Reading − previous reading; Total Load Hour = current Load Hour Reading − previous reading.
+</div>
+<div class="energy-kpis">
+<div class="energy-kpi"><span>Total Records</span><b id="energyTotal">0</b></div>
+<div class="energy-kpi"><span>Machines Covered</span><b id="energyMachines">0</b></div>
+<div class="energy-kpi"><span>Total KWH Consumption</span><b id="energyKwh">0</b></div>
+<div class="energy-kpi"><span>Total Run Hours</span><b id="energyRun">0</b></div>
+</div>
+<div class="toolbar">
+<label style="font-size:12px;font-weight:700">Month</label><select id="energyMonthFilter" onchange="energyRender()"><option value="">All Months</option></select>
+<label style="font-size:12px;font-weight:700">Machine</label><select id="energyMachineFilter" onchange="energyRender()"><option value="">All Machines</option></select>
+<button class="secondary" onclick="energyPrint()">🖨️ Print</button>
+<button class="secondary" onclick="energyExportCSV()">⬇️ Export CSV</button>
+</div>
+</div>
+<div class="card">
+<div class="head2">Daily Entry</div>
+<div class="energy-entry">
+<div class="field"><label>Date</label><input id="energy_date" type="date"/></div>
+<div class="field"><label>Machine No.</label><select id="energy_machine"><option value="">-- Select Machine --</option></select></div>
+<div class="field"><label>KWH Reading</label><input id="energy_kwh" type="number" step="0.01" min="0"/></div>
+<div class="field"><label>Run Hour Reading</label><input id="energy_run_reading" type="number" step="0.01" min="0"/></div>
+<div class="field"><label>Load Hour Reading</label><input id="energy_load_reading" type="number" step="0.01" min="0"/></div>
+<div class="field wide"><label>Remarks</label><input id="energy_remark" placeholder="Optional"/></div>
+<div class="actions wide">
+<button class="primary" onclick="energySave()">💾 Save Entry</button>
+<button class="secondary" onclick="energyClear()">Clear</button>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="head2">Register</div>
+<div class="tablewrap"><table class="tbl energy-table"><thead><tr>
+<th>Date</th><th>Machine No.</th><th>KWH</th><th>Unit Consumption/Day</th><th>Unit Consumption/Hour</th><th>Run Hour Reading</th><th>Load Hour Reading</th><th>Total Run Hour</th><th>Total Load Hour</th><th>Remarks</th><th>Action</th>
+</tr></thead><tbody id="energyBody"></tbody></table></div>
+<div class="note">Previous reading calculation machine-wise hoti hai. New machine ke first record me previous value available na hone par daily/total difference blank rahega; next entry se automatic calculation start hoga.</div>
+</div>
+</section>
+<script id="machine-energy-module-script">
+(function(){
+const ENERGY_KEY='htp7_machine_energy_v1';
+const MONTHS=['April','May','June','July','August','September','October','November','December','January','February','March'];
+function eLoad(){try{const v=JSON.parse(localStorage.getItem(ENERGY_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
+function eSave(a){localStorage.setItem(ENERGY_KEY,JSON.stringify(a))}
+function eEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function eNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function eMachineOptions(){
+ const sel=document.getElementById('energy_machine'); if(!sel)return;
+ let machines=[];
+ try{machines=Array.isArray(window.MACHINE_MASTER)?window.MACHINE_MASTER:[]}catch(e){}
+ const old=sel.value;
+ sel.innerHTML='<option value="">-- Select Machine --</option>'+machines.map(m=>'<option value="'+eEsc(m.machineNumber||m.machineNo||m.number||'')+'">'+eEsc(m.machineNumber||m.machineNo||m.number||'')+(m.machineName?' — '+eEsc(m.machineName):'')+'</option>').join('');
+ if(old)sel.value=old;
+}
+function ePrevious(rows,machine,date){
+ const same=rows.filter(r=>String(r.machineNo)===String(machine)&&String(r.date)<String(date)).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ return same[0]||null;
+}
+function eCalc(rec,rows){
+ const p=ePrevious(rows,rec.machineNo,rec.date);
+ const k=eNum(rec.kwh), pk=p?eNum(p.kwh):null, rr=eNum(rec.runHourReading), pr=p?eNum(p.runHourReading):null, lr=eNum(rec.loadHourReading), pl=p?eNum(p.loadHourReading):null;
+ rec.unitPerDay=(k!==null&&pk!==null)?+(k-pk).toFixed(2):'';
+ rec.unitPerHour=(rec.unitPerDay!==''?+(Number(rec.unitPerDay)/24).toFixed(2):'');
+ rec.totalRunHour=(rr!==null&&pr!==null)?+(rr-pr).toFixed(2):'';
+ rec.totalLoadHour=(lr!==null&&pl!==null)?+(lr-pl).toFixed(2):'';
+}
+window.energySave=function(){
+ const date=document.getElementById('energy_date').value,machine=document.getElementById('energy_machine').value;
+ const kwh=document.getElementById('energy_kwh').value,run=document.getElementById('energy_run_reading').value,load=document.getElementById('energy_load_reading').value;
+ if(!date||!machine||kwh===''||run===''||load===''){alert('Date, Machine No., KWH, Run Hour Reading aur Load Hour Reading required hai.');return}
+ const rows=eLoad();
+ const rec={id:Date.now().toString(),date,machineNo:machine,kwh:Number(kwh),runHourReading:Number(run),loadHourReading:Number(load),remark:document.getElementById('energy_remark').value||''};
+ if(rows.some(r=>r.machineNo===machine&&r.date===date)){alert('Is machine ki same date ki entry already hai.');return}
+ eCalc(rec,rows);rows.push(rec);rows.sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.machineNo).localeCompare(String(b.machineNo)));
+ eSave(rows);energyClear();energyRender();
+}
+window.energyClear=function(){
+ ['energy_kwh','energy_run_reading','energy_load_reading','energy_remark'].forEach(id=>{const x=document.getElementById(id);if(x)x.value=''});
+ const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+}
+window.energyDelete=function(id){
+ if(!confirm('Is energy entry ko delete karna hai?'))return;
+ const rows=eLoad().filter(r=>String(r.id)!==String(id));eSave(rows);energyRender();
+}
+window.energyRender=function(){
+ const rows=eLoad(), body=document.getElementById('energyBody');if(!body)return;
+ const mf=document.getElementById('energyMonthFilter').value, mach=document.getElementById('energyMachineFilter').value;
+ const filtered=rows.filter(r=>(!mf||String(r.date).slice(0,7)===mf)&&(!mach||r.machineNo===mach));
+ document.getElementById('energyTotal').textContent=rows.length;
+ document.getElementById('energyMachines').textContent=new Set(rows.map(r=>r.machineNo)).size;
+ document.getElementById('energyKwh').textContent=rows.reduce((s,r)=>s+(Number(r.unitPerDay)||0),0).toFixed(2);
+ document.getElementById('energyRun').textContent=rows.reduce((s,r)=>s+(Number(r.totalRunHour)||0),0).toFixed(2);
+ const months=[...new Set(rows.map(r=>String(r.date).slice(0,7)))].sort().reverse();
+ const msel=document.getElementById('energyMonthFilter'), old=msel.value;
+ msel.innerHTML='<option value="">All Months</option>'+months.map(m=>'<option value="'+m+'">'+m+'</option>').join('');if(months.includes(old))msel.value=old;
+ const machines=[...new Set(rows.map(r=>r.machineNo))].sort(), s=document.getElementById('energyMachineFilter'),so=s.value;
+ s.innerHTML='<option value="">All Machines</option>'+machines.map(m=>'<option>'+eEsc(m)+'</option>').join('');if(machines.includes(so))s.value=so;
+ const view=eLoad().filter(r=>(!msel.value||String(r.date).slice(0,7)===msel.value)&&(!s.value||r.machineNo===s.value));
+ body.innerHTML=view.map(r=>'<tr><td>'+eEsc(r.date)+'</td><td><b>'+eEsc(r.machineNo)+'</b></td><td class="num">'+eEsc(r.kwh)+'</td><td class="num calc">'+eEsc(r.unitPerDay)+'</td><td class="num calc">'+eEsc(r.unitPerHour)+'</td><td class="num">'+eEsc(r.runHourReading)+'</td><td class="num">'+eEsc(r.loadHourReading)+'</td><td class="num calc">'+eEsc(r.totalRunHour)+'</td><td class="num calc">'+eEsc(r.totalLoadHour)+'</td><td>'+eEsc(r.remark)+'</td><td><button class="danger" style="padding:5px 8px;font-size:11px" onclick="energyDelete(\''+eEsc(r.id)+'\')">Delete</button></td></tr>').join('')||'<tr><td colspan="11" class="note">No records yet.</td></tr>';
+}
+window.energyExportCSV=function(){
+ const rows=eLoad();if(!rows.length){alert('Export ke liye data nahi hai.');return}
+ const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
+ const csv=[head,...rows.map(r=>[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Machine_Energy_Register.csv';a.click();URL.revokeObjectURL(url);
+}
+window.energyPrint=function(){
+ const rows=eLoad();if(!rows.length){alert('Print ke liye data nahi hai.');return}
+ const w=window.open('','_blank','width=1300,height=800');if(!w)return;
+ const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
+ const body=rows.map(r=>'<tr>'+[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark].map(v=>'<td>'+eEsc(v)+'</td>').join('')+'</tr>').join('');
+ w.document.write('<!doctype html><html><head><title>Machine Energy Register</title><style>body{font-family:Arial;font-size:9px}h2{text-align:center}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:4px;text-align:center}th{background:#eee}@media print{@page{size:A4 landscape;margin:6mm}}</style></head><body><h2>MILESTONE GEAR LTD. UNIT-7 — MACHINE ENERGY &amp; RUNNING HOUR REGISTER</h2><table><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table></body></html>');w.document.close();setTimeout(()=>w.print(),300);
+}
+window.energyInit=function(){
+ const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+ eMachineOptions();energyRender();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',energyInit);else setTimeout(energyInit,0);
+})();
+</script></body></html>`);
  w.document.close();w.focus();setTimeout(()=>w.print(),250);
 }
 
@@ -3324,7 +3465,8 @@ const MODULE_KEYS=[
   'htp7_machine_master_editable_v1','htp7_mh','htp7_spare_inventory_v1',
   'htp7_spare_transactions_v1','htp7_pm_plan_v1','htp7_pm_checklists',
   'htp7_pm_machine_checklist_v1','htp7_power_cost_lifetime_v2',
-  'htp7_sat_records_v1','htp7_financial_years_v1'
+  'htp7_sat_records_v1','htp7_financial_years_v1',
+  'htp7_machine_energy_v1'
 ];
 const SHEET_MSG={
   BLOCKED:'Request Google tak nahi pahunchi ya block ho gayi.\n\nCheck karo:\n1) Web App URL sahi/naya hai (⚙️ URL)\n2) Deploy me "Who has access" = Anyone\n3) Internet / WiFi firewall (mobile data pe try karo)',
