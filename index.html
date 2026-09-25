@@ -3368,7 +3368,7 @@ async function sheetFetchJSON(action,timeoutMs=30000){
       try{
         d=JSON.parse(raw);
       }catch(parseErr){
-        const m=raw.match(/^[A-Za-z_$][0-9A-Za-z_$\.]*\\((.*)\\);?\\s*$/s);
+        const m=raw.match(/^[A-Za-z_$][0-9A-Za-z_$\.]*\((.*)\);?\s*$/s);
         if(!m) throw parseErr;
         d=JSON.parse(m[1]);
       }
