@@ -646,7 +646,8 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 }
 </style>
 <style id="restored-dashboard-data-css">
-.ref-dashboard-date{display:block;font-size:12px;font-weight:700;color:#dbeafe;margin:3px 0 5px;letter-spacing:.2px}.ref-card.orange{border-top:4px solid #f59e0b}.ref-card.orange .ref-card-head h3{color:#b45309}.ref-card.orange .ref-card-head button{background:linear-gradient(135deg,#f59e0b,#ea580c)}.ref-card.orange .ref-card-head button:hover{filter:brightness(1.05)}@media(max-width:700px){.ref-dashboard-date{font-size:11px}.ref-card.orange .ref-card-head{gap:6px}}</style>
+.ref-dashboard-date{display:block;font-size:12px;font-weight:700;color:#dbeafe;margin:3px 0 5px;letter-spacing:.2px}.ref-card.orange{border-top:4px solid #f59e0b}.ref-card.orange .ref-card-head h3{color:#b45309}.ref-card.orange .ref-card-head button{background:linear-gradient(135deg,#f59e0b,#ea580c)}.ref-card.orange .ref-card-head button:hover{filter:brightness(1.05)}@media(max-width:700px){.ref-dashboard-date{font-size:11px}.ref-card.orange .ref-card-head{gap:6px}}
+</style>
 <style id="mobile-role-access-fix">
 /* Mobile role access: keep Operator / Technician / Admin controls visible without changing permissions. */
 @media(max-width:800px){
@@ -935,7 +936,7 @@ table{border-radius:12px!important;overflow:hidden!important;box-shadow:0 7px 20
 <button class="tab" onclick="showTab('pc',this)">🔌 Power Cut Detail</button>
 <button class="tab" onclick="showTab('dg',this)">🛢️ DG Daily Reading</button>
 <button class="tab" onclick="showTab('mr',this)">🛠️ Maintenance Request Slip</button><button class="tab" onclick="showTab('bd',this)">🔧 Breakdown Data</button><button class="tab" onclick="showTab('mttr',this)">📊 Breakdown MTTR</button><button class="tab" onclick="showTab('pm',this)">🧰 Preventive Maintenance</button><button class="tab" onclick="showTab('pmPlan',this)">🗓️ PM Plan</button><button class="tab" onclick="showTab('mm',this)">📋 Machine Master</button><button class="tab" onclick="showTab('mh',this)">📜 Machine History Card</button><button class="tab" onclick="showTab('spare',this)">🧰 Spare Inventory</button>
-<button class="tab" onclick="showTab('powerCostLifetime',this)">⚡ Power Cost / HPSEBL</button><button class="tab" onclick="showTab('machineEnergy',this)">⚙️ Machine Energy &amp; Hour</button><button class="tab" onclick="showTab('sat',this)">🌡️ SAT</button></div>
+<button class="tab" onclick="showTab('powerCostLifetime',this)">⚡ Power Cost / HPSEBL</button><button class="tab" onclick="showTab('sat',this)">🌡️ SAT</button></div>
 <style id="spare-add-remove-css">
 .spare-editor-card{margin-top:12px;background:#f8fbfd;border:1px solid #d8e3ea}.spare-editor-form{margin-top:8px}.spare-editor-card.hidden{display:none}.spare-selected td{outline:2px solid #0b5cab;outline-offset:-2px;background:#eef7ff!important}.spare-select-btn{min-width:62px}.spare-custom-badge{display:inline-block;margin-left:5px;padding:2px 6px;border-radius:10px;background:#e9f7ef;color:#176b3a;font-size:10px;font-weight:700}
 </style>
@@ -2000,152 +2001,7 @@ function printReadingLog(type){
  const w=window.open('','_blank');if(!w)return alert('Please allow pop-ups to print.');
  const head=c.cols.map(x=>`<th>${esc(x)}</th>`).join('');
  const body=rows.length?rows.map(row=>`<tr>${row.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join(''):`<tr><td colspan="${c.cols.length}">No records found</td></tr>`;
- w.document.write(`<html><head><title>${esc(c.title)}</title><style>@page{size:A4 landscape;margin:7mm}body{font-family:Arial,sans-serif;color:#000;margin:0}.page{width:100%}.print-head{display:grid;grid-template-columns:34mm 1fr;align-items:center;border:2px solid #000;height:28mm;margin-bottom:5mm}.logo-cell{height:100%;display:flex;align-items:center;justify-content:center;border-right:2px solid #000}.logo-cell img{max-width:29mm;max-height:24mm}.company{text-align:center;font-size:20px;font-weight:800}.meta{text-align:center;font-size:12px;font-weight:700;margin:0 0 6px}.tbl{width:100%;border-collapse:collapse;page-break-inside:auto;font-size:8px}.tbl th,.tbl td{border:2px solid #000;padding:4px 3px;text-align:center;vertical-align:middle;word-break:break-word}.tbl th{font-weight:700}</style></head><body><div class="page"><div class="print-head"><div class="logo-cell"><img src="${APP_LOGO}"></div><div class="company">MILESTONE GEARS LTD. UNIT-7</div></div><div class="meta">${esc(c.title)}</div><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>
-<script>
-
-
-
-<style id="machine-energy-module-style">
-#machineEnergy .energy-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
-#machineEnergy .energy-kpi{background:#fff;border:1px solid #d9e5ef;border-radius:10px;padding:12px}
-#machineEnergy .energy-kpi b{display:block;font-size:23px;color:#0878e8;margin-top:4px}
-#machineEnergy .energy-kpi span{font-size:10px;color:#64748b;font-weight:800;text-transform:uppercase}
-#machineEnergy .energy-entry{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px}
-#machineEnergy .energy-entry .field{padding:10px;border:1px solid #e1e8ee;border-radius:9px;background:#fafdff}
-#machineEnergy .energy-entry .wide{grid-column:span 2}
-#machineEnergy .energy-table{min-width:1200px}
-#machineEnergy .energy-table input{min-width:95px;padding:6px;border:1px solid #cbd8e5;border-radius:6px}
-#machineEnergy .energy-table .calc{background:#f1f8ff;font-weight:700}
-#machineEnergy .energy-note{font-size:11px;color:#5b6f80;background:#f4f8fb;border-left:4px solid #0b8fd8;padding:9px 11px;border-radius:7px;margin:8px 0 12px}
-@media(max-width:900px){#machineEnergy .energy-kpis{grid-template-columns:repeat(2,1fr)}#machineEnergy .energy-entry{grid-template-columns:repeat(2,minmax(0,1fr))}#machineEnergy .energy-entry .wide{grid-column:1/-1}}
-@media(max-width:600px){#machineEnergy .energy-entry{grid-template-columns:1fr}#machineEnergy .energy-entry .wide{grid-column:auto}}
-</style>
-<section class="panel" id="machineEnergy">
-<div class="card">
-<div class="head">MACHINE ENERGY &amp; RUNNING HOUR REGISTER</div>
-<div class="head2">Daily KWH / Run Hour / Load Hour Recording</div>
-<div class="energy-note">
-Excel reference format ke same field sequence par module banaya gaya hai. Uploaded Excel ka <b>existing data import nahi kiya gaya</b>; module blank se start hoga.
-Calculation: Unit Consumption/Day = current KWH − previous KWH (same machine); Unit Consumption/Hour = Unit Consumption/Day ÷ 24; Total Run Hour = current Run Hour Reading − previous reading; Total Load Hour = current Load Hour Reading − previous reading.
-</div>
-<div class="energy-kpis">
-<div class="energy-kpi"><span>Total Records</span><b id="energyTotal">0</b></div>
-<div class="energy-kpi"><span>Machines Covered</span><b id="energyMachines">0</b></div>
-<div class="energy-kpi"><span>Total KWH Consumption</span><b id="energyKwh">0</b></div>
-<div class="energy-kpi"><span>Total Run Hours</span><b id="energyRun">0</b></div>
-</div>
-<div class="toolbar">
-<label style="font-size:12px;font-weight:700">Month</label><select id="energyMonthFilter" onchange="energyRender()"><option value="">All Months</option></select>
-<label style="font-size:12px;font-weight:700">Machine</label><select id="energyMachineFilter" onchange="energyRender()"><option value="">All Machines</option></select>
-<button class="secondary" onclick="energyPrint()">🖨️ Print</button>
-<button class="secondary" onclick="energyExportCSV()">⬇️ Export CSV</button>
-</div>
-</div>
-<div class="card">
-<div class="head2">Daily Entry</div>
-<div class="energy-entry">
-<div class="field"><label>Date</label><input id="energy_date" type="date"/></div>
-<div class="field"><label>Machine No.</label><select id="energy_machine"><option value="">-- Select Machine --</option></select></div>
-<div class="field"><label>KWH Reading</label><input id="energy_kwh" type="number" step="0.01" min="0"/></div>
-<div class="field"><label>Run Hour Reading</label><input id="energy_run_reading" type="number" step="0.01" min="0"/></div>
-<div class="field"><label>Load Hour Reading</label><input id="energy_load_reading" type="number" step="0.01" min="0"/></div>
-<div class="field wide"><label>Remarks</label><input id="energy_remark" placeholder="Optional"/></div>
-<div class="actions wide">
-<button class="primary" onclick="energySave()">💾 Save Entry</button>
-<button class="secondary" onclick="energyClear()">Clear</button>
-</div>
-</div>
-</div>
-<div class="card">
-<div class="head2">Register</div>
-<div class="tablewrap"><table class="tbl energy-table"><thead><tr>
-<th>Date</th><th>Machine No.</th><th>KWH</th><th>Unit Consumption/Day</th><th>Unit Consumption/Hour</th><th>Run Hour Reading</th><th>Load Hour Reading</th><th>Total Run Hour</th><th>Total Load Hour</th><th>Remarks</th><th>Action</th>
-</tr></thead><tbody id="energyBody"></tbody></table></div>
-<div class="note">Previous reading calculation machine-wise hoti hai. New machine ke first record me previous value available na hone par daily/total difference blank rahega; next entry se automatic calculation start hoga.</div>
-</div>
-</section>
-<script id="machine-energy-module-script">
-(function(){
-const ENERGY_KEY='htp7_machine_energy_v1';
-const MONTHS=['April','May','June','July','August','September','October','November','December','January','February','March'];
-function eLoad(){try{const v=JSON.parse(localStorage.getItem(ENERGY_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
-function eSave(a){localStorage.setItem(ENERGY_KEY,JSON.stringify(a))}
-function eEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function eNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
-function eMachineOptions(){
- const sel=document.getElementById('energy_machine'); if(!sel)return;
- let machines=[];
- try{machines=Array.isArray(window.MACHINE_MASTER)?window.MACHINE_MASTER:[]}catch(e){}
- const old=sel.value;
- sel.innerHTML='<option value="">-- Select Machine --</option>'+machines.map(m=>'<option value="'+eEsc(m.machineNumber||m.machineNo||m.number||'')+'">'+eEsc(m.machineNumber||m.machineNo||m.number||'')+(m.machineName?' — '+eEsc(m.machineName):'')+'</option>').join('');
- if(old)sel.value=old;
-}
-function ePrevious(rows,machine,date){
- const same=rows.filter(r=>String(r.machineNo)===String(machine)&&String(r.date)<String(date)).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
- return same[0]||null;
-}
-function eCalc(rec,rows){
- const p=ePrevious(rows,rec.machineNo,rec.date);
- const k=eNum(rec.kwh), pk=p?eNum(p.kwh):null, rr=eNum(rec.runHourReading), pr=p?eNum(p.runHourReading):null, lr=eNum(rec.loadHourReading), pl=p?eNum(p.loadHourReading):null;
- rec.unitPerDay=(k!==null&&pk!==null)?+(k-pk).toFixed(2):'';
- rec.unitPerHour=(rec.unitPerDay!==''?+(Number(rec.unitPerDay)/24).toFixed(2):'');
- rec.totalRunHour=(rr!==null&&pr!==null)?+(rr-pr).toFixed(2):'';
- rec.totalLoadHour=(lr!==null&&pl!==null)?+(lr-pl).toFixed(2):'';
-}
-window.energySave=function(){
- const date=document.getElementById('energy_date').value,machine=document.getElementById('energy_machine').value;
- const kwh=document.getElementById('energy_kwh').value,run=document.getElementById('energy_run_reading').value,load=document.getElementById('energy_load_reading').value;
- if(!date||!machine||kwh===''||run===''||load===''){alert('Date, Machine No., KWH, Run Hour Reading aur Load Hour Reading required hai.');return}
- const rows=eLoad();
- const rec={id:Date.now().toString(),date,machineNo:machine,kwh:Number(kwh),runHourReading:Number(run),loadHourReading:Number(load),remark:document.getElementById('energy_remark').value||''};
- if(rows.some(r=>r.machineNo===machine&&r.date===date)){alert('Is machine ki same date ki entry already hai.');return}
- eCalc(rec,rows);rows.push(rec);rows.sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.machineNo).localeCompare(String(b.machineNo)));
- eSave(rows);energyClear();energyRender();
-}
-window.energyClear=function(){
- ['energy_kwh','energy_run_reading','energy_load_reading','energy_remark'].forEach(id=>{const x=document.getElementById(id);if(x)x.value=''});
- const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
-}
-window.energyDelete=function(id){
- if(!confirm('Is energy entry ko delete karna hai?'))return;
- const rows=eLoad().filter(r=>String(r.id)!==String(id));eSave(rows);energyRender();
-}
-window.energyRender=function(){
- const rows=eLoad(), body=document.getElementById('energyBody');if(!body)return;
- const mf=document.getElementById('energyMonthFilter').value, mach=document.getElementById('energyMachineFilter').value;
- const filtered=rows.filter(r=>(!mf||String(r.date).slice(0,7)===mf)&&(!mach||r.machineNo===mach));
- document.getElementById('energyTotal').textContent=rows.length;
- document.getElementById('energyMachines').textContent=new Set(rows.map(r=>r.machineNo)).size;
- document.getElementById('energyKwh').textContent=rows.reduce((s,r)=>s+(Number(r.unitPerDay)||0),0).toFixed(2);
- document.getElementById('energyRun').textContent=rows.reduce((s,r)=>s+(Number(r.totalRunHour)||0),0).toFixed(2);
- const months=[...new Set(rows.map(r=>String(r.date).slice(0,7)))].sort().reverse();
- const msel=document.getElementById('energyMonthFilter'), old=msel.value;
- msel.innerHTML='<option value="">All Months</option>'+months.map(m=>'<option value="'+m+'">'+m+'</option>').join('');if(months.includes(old))msel.value=old;
- const machines=[...new Set(rows.map(r=>r.machineNo))].sort(), s=document.getElementById('energyMachineFilter'),so=s.value;
- s.innerHTML='<option value="">All Machines</option>'+machines.map(m=>'<option>'+eEsc(m)+'</option>').join('');if(machines.includes(so))s.value=so;
- const view=eLoad().filter(r=>(!msel.value||String(r.date).slice(0,7)===msel.value)&&(!s.value||r.machineNo===s.value));
- body.innerHTML=view.map(r=>'<tr><td>'+eEsc(r.date)+'</td><td><b>'+eEsc(r.machineNo)+'</b></td><td class="num">'+eEsc(r.kwh)+'</td><td class="num calc">'+eEsc(r.unitPerDay)+'</td><td class="num calc">'+eEsc(r.unitPerHour)+'</td><td class="num">'+eEsc(r.runHourReading)+'</td><td class="num">'+eEsc(r.loadHourReading)+'</td><td class="num calc">'+eEsc(r.totalRunHour)+'</td><td class="num calc">'+eEsc(r.totalLoadHour)+'</td><td>'+eEsc(r.remark)+'</td><td><button class="danger" style="padding:5px 8px;font-size:11px" onclick="energyDelete(\''+eEsc(r.id)+'\')">Delete</button></td></tr>').join('')||'<tr><td colspan="11" class="note">No records yet.</td></tr>';
-}
-window.energyExportCSV=function(){
- const rows=eLoad();if(!rows.length){alert('Export ke liye data nahi hai.');return}
- const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
- const csv=[head,...rows.map(r=>[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
- const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Machine_Energy_Register.csv';a.click();URL.revokeObjectURL(url);
-}
-window.energyPrint=function(){
- const rows=eLoad();if(!rows.length){alert('Print ke liye data nahi hai.');return}
- const w=window.open('','_blank','width=1300,height=800');if(!w)return;
- const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
- const body=rows.map(r=>'<tr>'+[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark].map(v=>'<td>'+eEsc(v)+'</td>').join('')+'</tr>').join('');
- w.document.write('<!doctype html><html><head><title>Machine Energy Register</title><style>body{font-family:Arial;font-size:9px}h2{text-align:center}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:4px;text-align:center}th{background:#eee}@media print{@page{size:A4 landscape;margin:6mm}}</style></head><body><h2>MILESTONE GEAR LTD. UNIT-7 — MACHINE ENERGY &amp; RUNNING HOUR REGISTER</h2><table><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table></body></html>');w.document.close();setTimeout(()=>w.print(),300);
-}
-window.energyInit=function(){
- const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
- eMachineOptions();energyRender();
-}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',energyInit);else setTimeout(energyInit,0);
-})();
-</script></body></html>`);
+ w.document.write(`<html><head><title>${esc(c.title)}</title><style>@page{size:A4 landscape;margin:7mm}body{font-family:Arial,sans-serif;color:#000;margin:0}.page{width:100%}.print-head{display:grid;grid-template-columns:34mm 1fr;align-items:center;border:2px solid #000;height:28mm;margin-bottom:5mm}.logo-cell{height:100%;display:flex;align-items:center;justify-content:center;border-right:2px solid #000}.logo-cell img{max-width:29mm;max-height:24mm}.company{text-align:center;font-size:20px;font-weight:800}.meta{text-align:center;font-size:12px;font-weight:700;margin:0 0 6px}.tbl{width:100%;border-collapse:collapse;page-break-inside:auto;font-size:8px}.tbl th,.tbl td{border:2px solid #000;padding:4px 3px;text-align:center;vertical-align:middle;word-break:break-word}.tbl th{font-weight:700}</style></head><body><div class="page"><div class="print-head"><div class="logo-cell"><img src="${APP_LOGO}"></div><div class="company">MILESTONE GEARS LTD. UNIT-7</div></div><div class="meta">${esc(c.title)}</div><table class="tbl"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div></body></html>`);
  w.document.close();w.focus();setTimeout(()=>w.print(),250);
 }
 
@@ -2221,7 +2077,7 @@ function printPM(index){
  let r=index===undefined?{template:f('pm_template'),machineNo:f('pm_machine_no'),date:f('pm_date'),start:f('pm_start'),end:f('pm_end'),checkedBy:f('pm_checked_by'),verifiedBy:f('pm_verified_by'),entries:pmEntries()}:data.pm[index];
  if(!r)return;
  let rows=normalizePMRows(r.checklistRows||PM_CHECKLISTS[r.template]?.rows||[]);
- let rowH=Math.max(5,Math.min(24,195/Math.max(rows.length,1))); let body=rows.map((x,i)=>{let e=(r.entries||[])[i]||{};let imgs=((PM_METHOD_IMAGES[r.template]||{})[String(i)]||[]).map(im=>`<img src="${im.src}" data-max-height="${Math.max(3,rowH-2)}">`).join('');return `<tr><td data-row-height="${rowH}">${x.sno}</td><td data-row-height="${rowH}"><b>${esc(x.freq)}</b></td><td class="activity" data-row-height="${rowH}">${esc(x.activity)}</td><td data-row-height="${rowH}"><b>${esc(x.standard)}</b></td><td class="method" data-row-height="${rowH}">${esc(x.method)}${imgs}</td><td data-row-height="${rowH}">${esc(e.observation)}</td><td data-row-height="${rowH}">${esc(e.workDone)}</td><td data-row-height="${rowH}">${esc(e.remark)}</td></tr>`}).join('');
+ let rowH=Math.max(5,Math.min(24,195/Math.max(rows.length,1))); let body=rows.map((x,i)=>{let e=(r.entries||[])[i]||{};let imgs=((PM_METHOD_IMAGES[r.template]||{})[String(i)]||[]).map(im=>`<img src="${im.src}" style="max-height:${Math.max(3,rowH-2)}mm">`).join('');return `<tr><td style="height:${rowH}mm">${x.sno}</td><td style="height:${rowH}mm"><b>${esc(x.freq)}</b></td><td class="activity" style="height:${rowH}mm">${esc(x.activity)}</td><td style="height:${rowH}mm"><b>${esc(x.standard)}</b></td><td class="method" style="height:${rowH}mm">${esc(x.method)}${imgs}</td><td style="height:${rowH}mm">${esc(e.observation)}</td><td style="height:${rowH}mm">${esc(e.workDone)}</td><td style="height:${rowH}mm">${esc(e.remark)}</td></tr>`}).join('');
  let w=window.open('','_blank');if(!w)return alert('Please allow pop-ups to print PM sheet.');
  w.document.write(`<html><head><title>FMT-MNT-04 - ${esc(r.template)}</title><style>
 @page{size:A4 portrait;margin:7mm 0}body{margin:0;background:#fff;color:#000}.pm-exact-page{width:210mm;margin:0 auto;font-family:Arial,Helvetica,sans-serif;font-size:9px}.pm-exact-page *{box-sizing:border-box}.pm-head{border:2px solid #000;border-bottom:0}.pm-head-top{height:31mm;display:grid;grid-template-columns:34mm 1fr;border-bottom:2px solid #000}.logo-cell{display:flex;align-items:center;justify-content:center;border-right:2px solid #000}.logo-cell img{max-width:30mm;max-height:27mm}.pm-company{display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800}.pm-row{display:grid;border-bottom:1px solid #000}.pm-row.r2{grid-template-columns:40% 30% 30%;height:16mm}.pm-row.r3{grid-template-columns:40% 36% 24%;height:12mm}.pm-row>div{border-right:1px solid #000;padding:3px 4px;font-weight:700;display:flex;align-items:center}.pm-row>div:last-child{border-right:0}.pm-exact-table{width:100%;border-collapse:collapse;table-layout:fixed}.pm-exact-table th,.pm-exact-table td{border:1px solid #000;vertical-align:middle;padding:3px}.pm-exact-table th{font-size:9px;height:18mm;text-align:center}.pm-exact-table td{font-size:8px;text-align:center;height:24mm}.pm-exact-table col:nth-child(1){width:7.3%}.pm-exact-table col:nth-child(2){width:10%}.pm-exact-table col:nth-child(3){width:23%}.pm-exact-table col:nth-child(4){width:12.2%}.pm-exact-table col:nth-child(5){width:12.2%}.pm-exact-table col:nth-child(6){width:12.2%}.pm-exact-table col:nth-child(7){width:12.2%}.pm-exact-table col:nth-child(8){width:11%}.pm-exact-table .activity{text-align:left;font-weight:600}.pm-exact-table .method img{max-width:22mm;max-height:20mm;object-fit:contain;display:block;margin:1mm auto}.pm-exact-foot{border:2px solid #000;border-top:0;height:10mm;display:grid;grid-template-columns:40% 60%;font-weight:700}.pm-exact-foot>div{display:flex;align-items:center;padding:3px 4px;border-right:1px solid #000}.pm-exact-foot>div:last-child{border-right:0}.pm-format-no{border:2px solid #000;border-top:0;height:7mm;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:9px}@media print{body{margin:0}}</style></head><body>
@@ -2230,7 +2086,7 @@ function printPM(index){
 <div class="pm-row r3"><div>M/C NAME:- ${esc(r.template==='CHARGE VEGON MACHINE'?'CHARGE WAGON MACHINE':r.template)}</div><div>M/C. No.:- ${esc(r.machineNo||'')}</div><div>Done Date:- ${esc(fmtDate(r.date)||'')}</div></div></div>
 <table class="pm-exact-table"><colgroup><col><col><col><col><col><col><col><col><col></colgroup><thead><tr><th>S.No.</th><th>Freq.</th><th>Activity<br>(Electrical + Mechanical)</th><th>Standard</th><th>Method</th><th>Observation</th><th>Work Done</th><th>Remark</th></tr></thead><tbody>${body}</tbody></table>
 <div class="pm-exact-foot"><div>CHECKED BY- ${esc(r.checkedBy||'')}</div><div>VERIFIED BY- ${esc(r.verifiedBy||'')}</div></div><div class="pm-format-no">FMT-MNT-04 REV NO: 00 DATE: 18.07.2014</div></div><script>window.onload=()=>window.print()<\/script>
- </body></html>`);w.document.close();
+</body></html>`);w.document.close();
 }
 function exportPMCSV(){
  let r=edit.pm!==null?data.pm[edit.pm]:{template:f('pm_template'),machineNo:f('pm_machine_no'),date:f('pm_date'),start:f('pm_start'),end:f('pm_end'),checkedBy:f('pm_checked_by'),verifiedBy:f('pm_verified_by'),entries:pmEntries()};let rows=normalizePMRows(r.checklistRows||PM_CHECKLISTS[r.template]?.rows||[]);let out=[['Checklist','Machine No','Date','Start','End','Checked By','Verified By','S.No','Freq','Activity','Standard','Method','Observation','Work Done','Remark']];rows.forEach((x,i)=>{let e=(r.entries||[])[i]||{};out.push([r.template,r.machineNo,r.date,r.start,r.end,r.checkedBy,r.verifiedBy,x.sno,x.freq,x.activity,x.standard,x.method,e.observation,e.workDone,e.remark])});let csv=out.map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='Preventive_Maintenance_'+(r.machineNo||r.template).replace(/[^a-z0-9_-]+/gi,'_')+'_'+(r.date||'').replace(/-/g,'')+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
@@ -3454,192 +3310,190 @@ function pclPrint(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',pclInit);else pclInit();
 </script>
 <script id="googleSheetSyncLayer">
-/* Google Sheet sync layer — module-wise Save + Load.
-   v3: fixed Google Apps Script Web App URL — user ko URL manually enter karne ki zaroorat nahi. */
+/* ================= GOOGLE SHEET ROBUST SYNC ================= */
 const GOOGLE_SHEET_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwEyG1SPn8J9HoHKV1MtXIF2PLtdqM8wwYi0bYnM_jFt0y78ZuzbxRdU7My-PMCmqE/exec';
-const GOOGLE_SHEET_URL_KEY='htp7_google_sheet_url'; /* MODULE_KEYS me nahi hai, isliye Sheet me sync nahi hota */
-const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v3';
-const SHEET_URL_RE=/^https:\/\/script\.google\.com\/(?:a\/macros\/[\w.-]+|macros)\/s\/[\w-]+\/exec$/;
+const GOOGLE_SHEET_URL_KEY='htp7_google_sheet_url';
+const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v6';
 const MODULE_KEYS=[
   'htp7_pf','htp7_pc','htp7_dg','htp7_mr','htp7_bd','htp7_pm',
   'htp7_machine_master_editable_v1','htp7_mh','htp7_spare_inventory_v1',
   'htp7_spare_transactions_v1','htp7_pm_plan_v1','htp7_pm_checklists',
   'htp7_pm_machine_checklist_v1','htp7_power_cost_lifetime_v2',
-  'htp7_sat_records_v1','htp7_financial_years_v1',
-  'htp7_machine_energy_v1'
+  'htp7_sat_records_v1','htp7_financial_years_v1'
 ];
-const SHEET_MSG={
-  BLOCKED:'Request Google tak nahi pahunchi ya block ho gayi.\n\nCheck karo:\n1) Web App URL sahi/naya hai (⚙️ URL)\n2) Deploy me "Who has access" = Anyone\n3) Internet / WiFi firewall (mobile data pe try karo)',
-  NOCALLBACK:'Sheet se galat format ka jawab aaya.\n\nApps Script me naya Code.gs paste karo, phir Deploy → Manage deployments → Edit → New version.',
-  TIMEOUT:'Sheet ne time par jawab nahi diya. Internet check karke dobara try karo.',
-  OFFLINE:'Internet connection nahi hai.',
-  LOGIN:'Google login page aa raha hai.\n\nDeploy → Manage deployments → Edit → "Who has access" = Anyone karo.',
-  DOGET:'Apps Script me doGet function nahi mila.\n\nNaya Code.gs paste karke New deployment karo.',
-  NOTFOUND:'Web App URL nahi mila (deployment delete ho gaya ya URL purana hai).\n\nNaya /exec URL ⚙️ URL se daalo.',
-  HTML:'Sheet ne data ki jagah web page bheja.\n\nURL aur deployment access (Anyone) check karo.',
-  EMPTY:'Sheet ka jawab khali aaya. Naya Code.gs paste karke New version deploy karo.',
-  BADJSON:'Sheet ka jawab samajh nahi aaya. Naya Code.gs paste karke New version deploy karo.'
-};
-function sheetErr(code){const e=new Error(SHEET_MSG[code]||code);e.code=code;return e;}
-function sheetUrl(){
-  return GOOGLE_SHEET_WEB_APP_URL;
+function sheetUrl(){ return GOOGLE_SHEET_WEB_APP_URL; }
+function sheetSetStatusSafe(msg,ok){
+  try{ if(typeof sheetStatus==='function') sheetStatus(msg,ok); else {
+    const el=document.getElementById('sheetSyncStatus');
+    if(el){el.textContent=msg;el.style.color=ok?'#1b7f3a':'#9a6700';}
+  }}catch(e){}
 }
-function sheetStatus(msg,ok){const el=document.getElementById('sheetSyncStatus');if(el){el.textContent=msg;el.title=msg;el.style.color=ok?'#1b7f3a':'#9a6700';}}
-function sheetCollectModules(){
-  const data={};
-  MODULE_KEYS.forEach(k=>{
-    const v=localStorage.getItem(k);
-    if(v!==null)data[k]=v;
-  });
-  // PM Plan is stored by financial year in separate localStorage keys.
-  // Collect all FY plans into the single PM Plan module so Google Sheet keeps
-  // one clean "PM Plan" tab instead of losing the active-year data.
-  try{
-    const rows=[];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i)||'';
-      if(!k.startsWith('htp7_pm_year_plan_v3_'))continue;
-      const fy=k.slice('htp7_pm_year_plan_v3_'.length);
-      let obj={};
-      try{obj=JSON.parse(localStorage.getItem(k)||'{}')||{};}catch(e){obj={};}
-      Object.keys(obj).forEach(planKey=>{
-        const rec=obj[planKey]||{};
-        const row={FY:fy,PlanKey:planKey,Frequency:rec.frequency||''};
-        const months=rec.months&&typeof rec.months==='object'?rec.months:{};
-        Object.keys(months).forEach(month=>{
-          const m=months[month]||{};
-          Object.keys(m).forEach(field=>row[month+' '+field]=m[field]);
-        });
-        rows.push(row);
-      });
-    }
-    if(rows.length)data.htp7_pm_plan_v1=JSON.stringify(rows);
-  }catch(e){console.warn('PM Plan sheet collection skipped',e);}
-  return data;
-}
-function sheetEnsureFrame(){let f=document.getElementById('googleSheetSaveFrame');if(!f){f=document.createElement('iframe');f.id='googleSheetSaveFrame';f.name='googleSheetSaveFrame';f.style.display='none';document.body.appendChild(f);}return f;}
-function sheetSleep(ms){return new Promise(r=>setTimeout(r,ms));}
+let sheetLoadInProgress=false, sheetSaveInProgress=false, sheetSyncApplying=false;
+let sheetLastSaveAt=0;
 
-/* JSONP (script tag) — 3 alag failure: request block (BLOCKED), galat format (NOCALLBACK), timeout */
-function sheetJsonp(action,timeoutMs){
+function sheetJsonp(action,timeoutMs=30000){
   return new Promise((resolve,reject)=>{
-    const cb='__htpSheetCb_'+Date.now()+'_'+Math.floor(Math.random()*100000);
+    const cb='__htp7_cb_'+Date.now()+'_'+Math.random().toString(36).slice(2);
     const s=document.createElement('script');
-    let done=false,got=false;
-    const timer=setTimeout(()=>{finish();reject(sheetErr('TIMEOUT'));},timeoutMs||20000);
-    function finish(){if(done)return;done=true;clearTimeout(timer);try{delete window[cb];}catch(e){window[cb]=undefined;}if(s.parentNode)s.parentNode.removeChild(s);}
-    window[cb]=d=>{got=true;finish();resolve(d);};
-    s.onerror=()=>{finish();reject(sheetErr('BLOCKED'));};
-    s.onload=()=>{if(!got){finish();reject(sheetErr('NOCALLBACK'));}};
+    let done=false;
+    const finish=(fn,v)=>{if(done)return;done=true;clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}try{s.remove()}catch(e){}fn(v)};
+    const timer=setTimeout(()=>finish(reject,new Error('Google Sheet request timeout')),timeoutMs);
+    window[cb]=d=>finish(resolve,d);
+    s.onerror=()=>finish(reject,new Error('Google Sheet request failed'));
     s.src=sheetUrl()+'?action='+encodeURIComponent(action)+'&callback='+encodeURIComponent(cb)+'&ts='+Date.now();
     document.head.appendChild(s);
   });
 }
-/* Fallback: fetch — purane backend ka MIME type galat ho tab bhi jawab padh leta hai aur HTML page pehchan leta hai */
-function sheetParseLoose(t){
-  t=String(t||'').trim();
-  if(!t)throw sheetErr('EMPTY');
-  if(t.charAt(0)==='<'){
-    if(/doGet/i.test(t))throw sheetErr('DOGET');
-    if(/accounts\.google\.com|ServiceLogin|Sign in/i.test(t))throw sheetErr('LOGIN');
-    if(/unable to open the file|Page Not Found|404/i.test(t))throw sheetErr('NOTFOUND');
-    throw sheetErr('HTML');
-  }
-  const m=t.match(/^[\w$.]+\(([\s\S]*)\)\s*;?\s*$/);
-  try{return JSON.parse(m?m[1]:t);}catch(e){throw sheetErr('BADJSON');}
-}
-async function sheetFetchLoose(action,timeoutMs){
-  const ctl=(typeof AbortController!=='undefined')?new AbortController():null;
-  const timer=ctl?setTimeout(()=>ctl.abort(),timeoutMs||20000):null;
+async function sheetFetchJSON(action,timeoutMs=30000){
+  // Apps Script web apps commonly redirect their JSON response. JSONP avoids
+  // browser CORS/redirect issues, so it is the primary GET path.
   try{
-    const r=await fetch(sheetUrl()+'?action='+encodeURIComponent(action)+'&callback=__htp&ts='+Date.now(),{cache:'no-store',credentials:'omit',redirect:'follow',signal:ctl?ctl.signal:undefined});
-    return sheetParseLoose(await r.text());
-  }finally{if(timer)clearTimeout(timer);}
-}
-async function sheetCall(action,timeoutMs){
-  let first;
-  try{return await sheetJsonp(action,timeoutMs);}catch(e){first=e;}
-  if(typeof navigator!=='undefined'&&navigator.onLine===false)throw sheetErr('OFFLINE');
-  try{return await sheetFetchLoose(action,timeoutMs);}
-  catch(e2){throw (e2&&typeof e2.code==='string')?e2:first;}   /* DOMException.code number hota hai — sirf apne string codes lo */
-}
-
-async function sheetTestConnection(){
-  sheetStatus('Testing…',false);
-  try{
-    const d=await sheetCall('ping',20000);
-    if(d&&d.status==='success'){sheetStatus('Google Sheet connected ✓',true);return true;}
-    throw new Error(d&&d.message?d.message:'Connection failed');
-  }catch(e){sheetStatus('Connection failed — local data still working',false);alert('Google Sheet connection failed.\n\n'+(e.message||e));return false;}
-}
-async function sheetSaveNow(options){
-  options=options||{};
-  const silent=!!options.silent;
-  const dataToSave=sheetCollectModules();
-  const keys=Object.keys(dataToSave);
-  if(!keys.length){if(!silent)alert('Save karne ke liye abhi koi module data nahi hai.');return false;}
-  const saveId=Date.now()+'-'+Math.floor(Math.random()*1000000);
-  sheetStatus(silent?'Auto-saving to Google Sheet…':'Saving module data to Google Sheet…',false);
-  let form=null;
-  try{
-    const frame=sheetEnsureFrame();
-    form=document.createElement('form');form.method='POST';form.action=sheetUrl();form.target=frame.name;form.enctype='application/x-www-form-urlencoded';form.style.display='none';
-    [['action','saveModules'],['saveId',saveId],['payload',JSON.stringify(dataToSave)]].forEach(([n,v])=>{const i=document.createElement('input');i.type='hidden';i.name=n;i.value=v;form.appendChild(i);});
-    document.body.appendChild(form);form.submit();
-    let info=null,verified=false,unverifiable=false;
-    const t0=Date.now();
-    await sheetSleep(silent?1200:2500);
-    while(Date.now()-t0<(silent?12000:40000)){
+    const d=await sheetJsonp(action,timeoutMs);
+    if(d&&typeof d==='object') return d;
+    throw new Error('Invalid JSONP response');
+  }catch(jsonpErr){
+    console.warn('[Google Sheet] JSONP failed, trying normal fetch:',jsonpErr);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),timeoutMs);
+    try{
+      const r=await fetch(sheetUrl()+'?action='+encodeURIComponent(action)+'&ts='+Date.now(),{
+        method:'GET',cache:'no-store',credentials:'omit',redirect:'follow',
+        signal:controller.signal,headers:{'Accept':'application/json'}
+      });
+      const raw=(await r.text()).trim();
+      if(!r.ok) throw new Error('HTTP '+r.status+' '+r.statusText);
+      // Apps Script can return JSONP even on a normal fetch. Accept both
+      // plain JSON and callback({...}); so verification does not fail.
+      let d;
       try{
-        info=await sheetCall('status',silent?6000:15000);
-        if(info&&info.status==='success'){
-          if(info.lastSaveId===saveId){verified=true;break;}
-          if(info.lastSaveId===undefined){unverifiable=true;break;}
-        }else if(info){unverifiable=true;break;}
-      }catch(e){
-        if(e&&(e.code==='LOGIN'||e.code==='DOGET'||e.code==='NOTFOUND'||e.code==='OFFLINE'))throw e;
+        d=JSON.parse(raw);
+      }catch(parseErr){
+        const m=raw.match(/^[A-Za-z_$][0-9A-Za-z_$\.]*\((.*)\);?\s*$/s);
+        if(!m) throw parseErr;
+        d=JSON.parse(m[1]);
       }
-      await sheetSleep(1500);
-    }
-    if(verified){
-      localStorage.setItem(GOOGLE_SHEET_SYNC_KEY,new Date().toISOString());
-      sheetStatus('Google Sheet auto-updated ✓',true);
-      if(!silent)alert('All module data Google Sheet me save ho gaya ('+(info.modules||keys.length)+' modules).');
+      if(!d||typeof d!=='object') throw new Error('Invalid backend response');
+      return d;
+    }finally{clearTimeout(timer);}
+  }
+}
+async function sheetTestConnection(){
+  sheetSetStatusSafe('🔄 Google Sheet connection test...',false);
+  try{
+    let d;
+    try{d=await sheetFetchJSON('ping',12000)}catch(e){d=await sheetFetchJSON('load',20000)}
+    if(d&&d.status==='success'){
+      sheetSetStatusSafe('🟢 Google Sheet Connected ✓',true);
+      alert('Google Sheet connection successful ✓');
       return true;
     }
-    if(unverifiable){
-      sheetStatus(silent?'Data sent to Google Sheet':'Data bheja — confirm nahi ho saka',false);
-      if(!silent)alert('Data Google Sheet ko bhej diya gaya, lekin Sheet ne confirm nahi kiya (backend purana lagta hai).\n\nSheet me data check karo, ya naya Code.gs use karo.');
-      return false;
-    }
-    throw new Error('Sheet ne save confirm nahi kiya. Test Connection karke dobara Save karo.');
+    throw new Error(d?.message||'Ping response invalid');
   }catch(e){
-    sheetStatus(silent?'Auto-sync failed — local data safe':'Save failed — local data safe',false);
-    if(!silent)alert('Google Sheet me save nahi hua:\n\n'+(e.message||e));
+    console.error('[Google Sheet] ping failed',e);
+    sheetSetStatusSafe('🔴 Google Sheet Connection Failed',false);
+    alert('Google Sheet connection failed.\n\nReason: '+(e?.message||e)+'\n\nAgar ye error repeat ho, Apps Script Web App deployment ko latest backend code par update karna hoga.');
     return false;
-  }finally{try{if(form)form.remove();}catch(e){}}
+  }
 }
-
-async function sheetLoadNow(){
-  if(!confirm('Google Sheet se module data load karna hai? Isse app ke current module data replace honge.'))return false;
-  sheetStatus('Loading module data from Google Sheet…',false);
+function sheetCollectModules(){
+  const payload={};
+  MODULE_KEYS.forEach(k=>{
+    const raw=localStorage.getItem(k);
+    if(raw!==null&&raw!==''){
+      try{payload[k]=JSON.parse(raw)}catch(e){payload[k]=raw}
+    }
+  });
+  const pmRows=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i)||'';
+    if(!key.startsWith('htp7_pm_year_plan_v3_')) continue;
+    const fy=key.slice('htp7_pm_year_plan_v3_'.length);
+    let obj={};try{obj=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+    Object.entries(obj).forEach(([planKey,rec])=>{
+      const row={FY:fy,PlanKey:planKey,Frequency:rec?.frequency||''};
+      Object.entries(rec?.months||{}).forEach(([month,vals])=>{
+        ['planned','actual','nextDate','tech','work','remark','pmCheckId'].forEach(field=>{
+          if(vals&&vals[field]!==undefined) row[month+' '+field]=vals[field];
+        });
+      });
+      pmRows.push(row);
+    });
+  }
+  if(pmRows.length) payload.htp7_pm_plan_v1=pmRows;
+  return payload;
+}
+function sheetEnsureFrame(){
+  let f=document.getElementById('htp7_google_sheet_save_frame');
+  if(!f){
+    f=document.createElement('iframe');f.id='htp7_google_sheet_save_frame';
+    f.name='htp7_google_sheet_save_frame';f.style.display='none';
+    document.body.appendChild(f);
+  }
+  return f;
+}
+async function sheetSaveNow(showStatus=true){
+  // Backward compatibility with older calls such as sheetSaveNow({silent:true}).
+  if(typeof showStatus==='object') showStatus=!showStatus.silent;
+  if(sheetSaveInProgress||sheetSyncApplying)return false;
+  sheetSaveInProgress=true;
   try{
-    const result=await sheetCall('loadModulesJSONP',45000);
-    if(!result||result.status!=='success'||!result.modules)throw new Error(result&&result.message?result.message:'Sheet se module data nahi mila');
-    let count=0;
-    // Rebuild financial-year PM Plan storage from the tabular Google Sheet data.
+    const payload=sheetCollectModules();
+    const saveId='save_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);
+    sheetSetStatusSafe('📤 Google Sheet me data save ho raha hai...',false);
+    sheetEnsureFrame();
+    const form=document.createElement('form');
+    form.method='POST';form.action=sheetUrl();form.target='htp7_google_sheet_save_frame';
+    form.style.display='none';
+    const add=(n,v)=>{const i=document.createElement('input');i.type='hidden';i.name=n;i.value=v;form.appendChild(i)};
+    add('action','saveModules');add('saveId',saveId);add('payload',JSON.stringify(payload));
+    document.body.appendChild(form);form.submit();form.remove();
+    sheetLastSaveAt=Date.now();
+    localStorage.setItem('htp7_google_sheet_last_save_v2',new Date(sheetLastSaveAt).toISOString());
+    // Wait briefly, then read the backend again. This turns the old
+    // fire-and-forget save into a real save verification.
+    await new Promise(r=>setTimeout(r,1800));
+    let verify=null,lastVerifyErr=null;
+    for(let attempt=1;attempt<=4;attempt++){
+      try{verify=await sheetFetchJSON('load',25000);if(verify&&verify.status==='success'&&verify.modules)break;lastVerifyErr=new Error(verify?.message||'Backend response invalid');}
+      catch(err){lastVerifyErr=err}
+      await new Promise(r=>setTimeout(r,1200));
+    }
+    if(!verify||verify.status!=='success'||!verify.modules) throw new Error('Save verification failed: '+(lastVerifyErr?.message||'backend did not confirm'));
+    sheetSetStatusSafe('☁️ Google Sheet Saved & Verified ✓',true);
+    return true;
+  }catch(e){
+    console.error('[Google Sheet] save failed',e);
+    sheetSetStatusSafe('⚠️ Google Sheet save verify failed — Local data safe',false);
+    if(showStatus) alert('Google Sheet save verify nahi ho paaya.\n\nReason: '+(e?.message||e));
+    return false;
+  }finally{sheetSaveInProgress=false;}
+}
+async function sheetLoadNow(silent=false){
+  if(sheetLoadInProgress||sheetSaveInProgress)return false;
+  if(!silent&&!confirm('Google Sheet se latest data load karna chahte hain?'))return false;
+  sheetLoadInProgress=true;
+  sheetSetStatusSafe('📥 Google Sheet se latest data load ho raha hai...',false);
+  try{
+    const result=await sheetFetchJSON('loadModulesJSONP',30000);
+    if(!result||result.status!=='success'||!result.modules)throw new Error(result?.message||'Module data receive nahi hua');
+    let loaded=0,changed=0;
+    sheetSyncApplying=true;
     try{
-      const pm=result.modules['htp7_pm_plan_v1'];
+      Object.entries(result.modules).forEach(([key,info])=>{
+        if(!info||!info.hasData||info.data===null||info.data===undefined)return;
+        const fresh=typeof info.data==='string'?info.data:JSON.stringify(info.data);
+        loaded++;
+        if(localStorage.getItem(key)!==fresh){localStorage.setItem(key,fresh);changed++}
+      });
+      const pm=result.modules.htp7_pm_plan_v1;
       if(pm&&pm.hasData&&Array.isArray(pm.data)){
         const byFY={};
         pm.data.forEach(row=>{
-          const fy=String(row.FY||'').trim();
-          const planKey=String(row.PlanKey||'').trim();
+          const fy=String(row?.FY||'').trim(),planKey=String(row?.PlanKey||'').trim();
           if(!fy||!planKey)return;
           byFY[fy]=byFY[fy]||{};
-          const rec=byFY[fy][planKey]||{frequency:row.Frequency||'',months:{}};
-          if(row.Frequency!==undefined)rec.frequency=row.Frequency||'';
-          rec.months=rec.months||{};
+          const rec=byFY[fy][planKey]||{frequency:row?.Frequency||'',months:{}};
+          if(row?.Frequency!==undefined)rec.frequency=row.Frequency||'';
           Object.keys(row).forEach(k=>{
             const m=k.match(/^(.+) (planned|actual|nextDate|tech|work|remark|pmCheckId)$/);
             if(!m)return;
@@ -3649,79 +3503,61 @@ async function sheetLoadNow(){
           });
           byFY[fy][planKey]=rec;
         });
-        Object.keys(byFY).forEach(fy=>localStorage.setItem('htp7_pm_year_plan_v3_'+fy,JSON.stringify(byFY[fy])));
-        localStorage.removeItem('htp7_pm_plan_v1');
-        count++;
+        Object.entries(byFY).forEach(([fy,obj])=>{
+          const k='htp7_pm_year_plan_v3_'+fy,fresh=JSON.stringify(obj);
+          if(localStorage.getItem(k)!==fresh){localStorage.setItem(k,fresh);changed++}
+        });
       }
-    }catch(e){console.warn('PM Plan sheet restore skipped',e);}
-    MODULE_KEYS.forEach(k=>{
-      if(k==='htp7_pm_plan_v1')return;
-      const m=result.modules[k];
-      if(m&&m.hasData){
-        let v=m.data;
-        localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));
-        count++;
-      }
-    });
-    if(!count){
-      sheetStatus('Sheet me abhi data nahi hai',false);
-      alert('Google Sheet me abhi koi module data nahi mila.\n\nPehle jis device me latest data hai wahan "Save to Sheet" karo.');
-      return false;
-    }
-    localStorage.setItem(GOOGLE_SHEET_SYNC_KEY,new Date().toISOString());
-    sheetStatus('Loaded from Google Sheet ✓',true);
-    alert('Google Sheet se '+count+' modules load ho gaye. App ab latest Sheet data ke saath open hoga.');
-    location.reload();
-    return true;
-  }catch(e){sheetStatus('Load failed — local data unchanged',false);alert('Google Sheet se data load nahi hua:\n\n'+(e.message||e));return false;}
-}
-function sheetSetUrl(){
-  alert('Google Sheet connection URL app me already set hai. Aapko URL manually add karne ki zaroorat nahi hai.');
-}
-window.sheetTestConnection=sheetTestConnection;window.sheetSaveNow=sheetSaveNow;window.sheetLoadNow=sheetLoadNow;window.sheetSetUrl=sheetSetUrl;
-/* Also sync modules that use their own storage helpers instead of persist(). */
-(function installModuleStorageSync(){
-  try{
-    const nativeSetItem=localStorage.setItem.bind(localStorage);
-    const modulePrefixes=['htp7_pm_year_plan_v3_'];
-    const moduleKeys=new Set(MODULE_KEYS);
-    localStorage.setItem=function(k,v){
-      nativeSetItem(k,v);
-      if(k===GOOGLE_SHEET_SYNC_KEY || k===GOOGLE_SHEET_URL_KEY)return;
-      if(moduleKeys.has(k) || modulePrefixes.some(p=>String(k).startsWith(p))) scheduleSheetAutoSave();
-    };
-  }catch(e){console.warn('Module storage sync hook skipped',e);}
-})();
-/* Automatic Google Sheet sync: every local data change is pushed after a short debounce. */
-window.addEventListener('online',()=>{if(_sheetAutoSavePending)scheduleSheetAutoSave();});
-setTimeout(()=>{try{if(localStorage.getItem(GOOGLE_SHEET_SYNC_KEY))sheetStatus('Auto-sync ready ✓',true);}catch(e){}},1200);
-setTimeout(()=>{
-  async function autoRemoteSync(){
+      localStorage.setItem('htp7_google_sheet_sync_v2',new Date().toISOString());
+    }finally{sheetSyncApplying=false}
     try{
-      const st=await sheetCall('status',5000);
-      if(!st || !st.lastUpdated) return;
-      const lastSeen=localStorage.getItem('htp7_last_remote_update')||'';
-      if(st.lastUpdated!==lastSeen){
-        localStorage.setItem('htp7_last_remote_update',st.lastUpdated);
-        const result=await sheetCall('loadModulesJSONP',15000);
-        if(result && result.status==='success' && result.modules){
-          Object.keys(result.modules).forEach(k=>{
-            const m=result.modules[k];
-            if(m && m.hasData){
-              localStorage.setItem(k, typeof m.data==='string' ? m.data : JSON.stringify(m.data));
-            }
-          });
-          sheetStatus('Auto synced ✓',true);
-          location.reload();
-        }
+      if(typeof data!=='undefined'&&typeof KEY!=='undefined'&&typeof load==='function'){
+        Object.keys(KEY).forEach(k=>{try{data[k]=load(k)}catch(e){}});
       }
+      if(typeof renderAll==='function')renderAll();
+      if(typeof renderDashboard==='function')renderDashboard();
+      if(typeof refreshDashboard==='function')refreshDashboard();
     }catch(e){}
-  }
-  setInterval(autoRemoteSync,10000);
-},2000);
-
-</script>
-<script>
+    sheetSetStatusSafe(changed?('Google Sheet Synced ✓ ('+changed+' changes)'):('Google Sheet Synced ✓ ('+loaded+' modules)'),true);
+    return true;
+  }catch(e){
+    console.error('[Google Sheet] load failed',e);
+    sheetSetStatusSafe('⚠️ Google Sheet fetch failed — Local data active',false);
+    if(!silent)alert('Google Sheet se data fetch nahi ho pa raha.\n\nReason: '+(e?.message||e));
+    return false;
+  }finally{sheetLoadInProgress=false}
+}
+function sheetCall(action,timeoutMs){return sheetFetchJSON(action,timeoutMs||30000)}
+function triggerImmediateAutoSave(){
+  if(sheetSyncApplying||sheetLoadInProgress||sheetSaveInProgress)return;
+  clearTimeout(window.__htp7AutoSaveTimer);
+  window.__htp7AutoSaveTimer=setTimeout(()=>sheetSaveNow(true),900);
+}
+(function installSheetStorageHook(){
+  if(window.__htp7SheetStorageHookInstalled)return;
+  window.__htp7SheetStorageHookInstalled=true;
+  const original=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(key,value){
+    const result=original.call(this,key,value);
+    try{
+      if(this===localStorage&&!sheetSyncApplying&&!sheetLoadInProgress&&!sheetSaveInProgress&&MODULE_KEYS.includes(String(key)))triggerImmediateAutoSave();
+    }catch(e){}
+    return result;
+  };
+})();
+function sheetStartAutoRefresh(){
+  if(window.__htp7SheetRefreshTimer)return;
+  window.__htp7SheetRefreshTimer=setInterval(()=>{
+    if(document.hidden||sheetLoadInProgress||sheetSaveInProgress||sheetSyncApplying)return;
+    if(Date.now()-sheetLastSaveAt<5000)return;
+    sheetLoadNow(true);
+  },30000);
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>sheetLoadNow(true),500);
+  sheetStartAutoRefresh();
+});
+</script><script>
 /* PWA: service worker + 📲 Install App button */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -3771,6 +3607,147 @@ if ("serviceWorker" in navigator) {
     else steps='Chrome me ⋮ menu → "Install app" (ya "Add to Home screen") dabao.\n\nOption na dikhe to: Desktop site OFF karo, Incognito me na ho, page refresh karke 10–15 second ruko, phir menu dobara dekho.';
     alert(steps);
   };
+})();
+</script>
+<style id="machine-energy-module-style">
+#machineEnergy .energy-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+#machineEnergy .energy-kpi{background:#fff;border:1px solid #d9e5ef;border-radius:10px;padding:12px}
+#machineEnergy .energy-kpi b{display:block;font-size:23px;color:#0878e8;margin-top:4px}
+#machineEnergy .energy-kpi span{font-size:10px;color:#64748b;font-weight:800;text-transform:uppercase}
+#machineEnergy .energy-entry{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:10px}
+#machineEnergy .energy-entry .field{padding:10px;border:1px solid #e1e8ee;border-radius:9px;background:#fafdff}
+#machineEnergy .energy-entry .wide{grid-column:span 2}
+#machineEnergy .energy-table{min-width:1200px}
+#machineEnergy .energy-table input{min-width:95px;padding:6px;border:1px solid #cbd8e5;border-radius:6px}
+#machineEnergy .energy-table .calc{background:#f1f8ff;font-weight:700}
+#machineEnergy .energy-note{font-size:11px;color:#5b6f80;background:#f4f8fb;border-left:4px solid #0b8fd8;padding:9px 11px;border-radius:7px;margin:8px 0 12px}
+@media(max-width:900px){#machineEnergy .energy-kpis{grid-template-columns:repeat(2,1fr)}#machineEnergy .energy-entry{grid-template-columns:repeat(2,minmax(0,1fr))}#machineEnergy .energy-entry .wide{grid-column:1/-1}}
+@media(max-width:600px){#machineEnergy .energy-entry{grid-template-columns:1fr}#machineEnergy .energy-entry .wide{grid-column:auto}}
+</style>
+<section class="panel" id="machineEnergy">
+<div class="card">
+<div class="head">MACHINE ENERGY &amp; RUNNING HOUR REGISTER</div>
+<div class="head2">Daily KWH / Run Hour / Load Hour Recording</div>
+<div class="energy-note">
+Excel reference format ke same field sequence par module banaya gaya hai. Uploaded Excel ka <b>existing data import nahi kiya gaya</b>; module blank se start hoga.
+Calculation: Unit Consumption/Day = current KWH − previous KWH (same machine); Unit Consumption/Hour = Unit Consumption/Day ÷ 24; Total Run Hour = current Run Hour Reading − previous reading; Total Load Hour = current Load Hour Reading − previous reading.
+</div>
+<div class="energy-kpis">
+<div class="energy-kpi"><span>Total Records</span><b id="energyTotal">0</b></div>
+<div class="energy-kpi"><span>Machines Covered</span><b id="energyMachines">0</b></div>
+<div class="energy-kpi"><span>Total KWH Consumption</span><b id="energyKwh">0</b></div>
+<div class="energy-kpi"><span>Total Run Hours</span><b id="energyRun">0</b></div>
+</div>
+<div class="toolbar">
+<label style="font-size:12px;font-weight:700">Month</label><select id="energyMonthFilter" onchange="energyRender()"><option value="">All Months</option></select>
+<label style="font-size:12px;font-weight:700">Machine</label><select id="energyMachineFilter" onchange="energyRender()"><option value="">All Machines</option></select>
+<button class="secondary" onclick="energyPrint()">🖨️ Print</button>
+<button class="secondary" onclick="energyExportCSV()">⬇️ Export CSV</button>
+</div>
+</div>
+<div class="card">
+<div class="head2">Daily Entry</div>
+<div class="energy-entry">
+<div class="field"><label>Date</label><input id="energy_date" type="date"/></div>
+<div class="field"><label>Machine No.</label><select id="energy_machine"><option value="">-- Select Machine --</option></select></div>
+<div class="field"><label>KWH Reading</label><input id="energy_kwh" type="number" step="0.01" min="0"/></div>
+<div class="field"><label>Run Hour Reading</label><input id="energy_run_reading" type="number" step="0.01" min="0"/></div>
+<div class="field"><label>Load Hour Reading</label><input id="energy_load_reading" type="number" step="0.01" min="0"/></div>
+<div class="field wide"><label>Remarks</label><input id="energy_remark" placeholder="Optional"/></div>
+<div class="actions wide">
+<button class="primary" onclick="energySave()">💾 Save Entry</button>
+<button class="secondary" onclick="energyClear()">Clear</button>
+</div>
+</div>
+</div>
+<div class="card">
+<div class="head2">Register</div>
+<div class="tablewrap"><table class="tbl energy-table"><thead><tr>
+<th>Date</th><th>Machine No.</th><th>KWH</th><th>Unit Consumption/Day</th><th>Unit Consumption/Hour</th><th>Run Hour Reading</th><th>Load Hour Reading</th><th>Total Run Hour</th><th>Total Load Hour</th><th>Remarks</th><th>Action</th>
+</tr></thead><tbody id="energyBody"></tbody></table></div>
+<div class="note">Previous reading calculation machine-wise hoti hai. New machine ke first record me previous value available na hone par daily/total difference blank rahega; next entry se automatic calculation start hoga.</div>
+</div>
+</section>
+<script id="machine-energy-module-script">
+(function(){
+const ENERGY_KEY='htp7_machine_energy_v1';
+const MONTHS=['April','May','June','July','August','September','October','November','December','January','February','March'];
+function eLoad(){try{const v=JSON.parse(localStorage.getItem(ENERGY_KEY)||'[]');return Array.isArray(v)?v:[]}catch(e){return[]}}
+function eSave(a){localStorage.setItem(ENERGY_KEY,JSON.stringify(a))}
+function eEsc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function eNum(v){const n=Number(v);return Number.isFinite(n)?n:null}
+function eMachineOptions(){
+ const sel=document.getElementById('energy_machine'); if(!sel)return;
+ let machines=[];
+ try{machines=Array.isArray(window.MACHINE_MASTER)?window.MACHINE_MASTER:[]}catch(e){}
+ const old=sel.value;
+ sel.innerHTML='<option value="">-- Select Machine --</option>'+machines.map(m=>'<option value="'+eEsc(m.machineNumber||m.machineNo||m.number||'')+'">'+eEsc(m.machineNumber||m.machineNo||m.number||'')+(m.machineName?' — '+eEsc(m.machineName):'')+'</option>').join('');
+ if(old)sel.value=old;
+}
+function ePrevious(rows,machine,date){
+ const same=rows.filter(r=>String(r.machineNo)===String(machine)&&String(r.date)<String(date)).sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ return same[0]||null;
+}
+function eCalc(rec,rows){
+ const p=ePrevious(rows,rec.machineNo,rec.date);
+ const k=eNum(rec.kwh), pk=p?eNum(p.kwh):null, rr=eNum(rec.runHourReading), pr=p?eNum(p.runHourReading):null, lr=eNum(rec.loadHourReading), pl=p?eNum(p.loadHourReading):null;
+ rec.unitPerDay=(k!==null&&pk!==null)?+(k-pk).toFixed(2):'';
+ rec.unitPerHour=(rec.unitPerDay!==''?+(Number(rec.unitPerDay)/24).toFixed(2):'');
+ rec.totalRunHour=(rr!==null&&pr!==null)?+(rr-pr).toFixed(2):'';
+ rec.totalLoadHour=(lr!==null&&pl!==null)?+(lr-pl).toFixed(2):'';
+}
+window.energySave=function(){
+ const date=document.getElementById('energy_date').value,machine=document.getElementById('energy_machine').value;
+ const kwh=document.getElementById('energy_kwh').value,run=document.getElementById('energy_run_reading').value,load=document.getElementById('energy_load_reading').value;
+ if(!date||!machine||kwh===''||run===''||load===''){alert('Date, Machine No., KWH, Run Hour Reading aur Load Hour Reading required hai.');return}
+ const rows=eLoad();
+ const rec={id:Date.now().toString(),date,machineNo:machine,kwh:Number(kwh),runHourReading:Number(run),loadHourReading:Number(load),remark:document.getElementById('energy_remark').value||''};
+ if(rows.some(r=>r.machineNo===machine&&r.date===date)){alert('Is machine ki same date ki entry already hai.');return}
+ eCalc(rec,rows);rows.push(rec);rows.sort((a,b)=>String(a.date).localeCompare(String(b.date))||String(a.machineNo).localeCompare(String(b.machineNo)));
+ eSave(rows);energyClear();energyRender();
+}
+window.energyClear=function(){
+ ['energy_kwh','energy_run_reading','energy_load_reading','energy_remark'].forEach(id=>{const x=document.getElementById(id);if(x)x.value=''});
+ const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+}
+window.energyDelete=function(id){
+ if(!confirm('Is energy entry ko delete karna hai?'))return;
+ const rows=eLoad().filter(r=>String(r.id)!==String(id));eSave(rows);energyRender();
+}
+window.energyRender=function(){
+ const rows=eLoad(), body=document.getElementById('energyBody');if(!body)return;
+ const mf=document.getElementById('energyMonthFilter').value, mach=document.getElementById('energyMachineFilter').value;
+ const filtered=rows.filter(r=>(!mf||String(r.date).slice(0,7)===mf)&&(!mach||r.machineNo===mach));
+ document.getElementById('energyTotal').textContent=rows.length;
+ document.getElementById('energyMachines').textContent=new Set(rows.map(r=>r.machineNo)).size;
+ document.getElementById('energyKwh').textContent=rows.reduce((s,r)=>s+(Number(r.unitPerDay)||0),0).toFixed(2);
+ document.getElementById('energyRun').textContent=rows.reduce((s,r)=>s+(Number(r.totalRunHour)||0),0).toFixed(2);
+ const months=[...new Set(rows.map(r=>String(r.date).slice(0,7)))].sort().reverse();
+ const msel=document.getElementById('energyMonthFilter'), old=msel.value;
+ msel.innerHTML='<option value="">All Months</option>'+months.map(m=>'<option value="'+m+'">'+m+'</option>').join('');if(months.includes(old))msel.value=old;
+ const machines=[...new Set(rows.map(r=>r.machineNo))].sort(), s=document.getElementById('energyMachineFilter'),so=s.value;
+ s.innerHTML='<option value="">All Machines</option>'+machines.map(m=>'<option>'+eEsc(m)+'</option>').join('');if(machines.includes(so))s.value=so;
+ const view=eLoad().filter(r=>(!msel.value||String(r.date).slice(0,7)===msel.value)&&(!s.value||r.machineNo===s.value));
+ body.innerHTML=view.map(r=>'<tr><td>'+eEsc(r.date)+'</td><td><b>'+eEsc(r.machineNo)+'</b></td><td class="num">'+eEsc(r.kwh)+'</td><td class="num calc">'+eEsc(r.unitPerDay)+'</td><td class="num calc">'+eEsc(r.unitPerHour)+'</td><td class="num">'+eEsc(r.runHourReading)+'</td><td class="num">'+eEsc(r.loadHourReading)+'</td><td class="num calc">'+eEsc(r.totalRunHour)+'</td><td class="num calc">'+eEsc(r.totalLoadHour)+'</td><td>'+eEsc(r.remark)+'</td><td><button class="danger" style="padding:5px 8px;font-size:11px" onclick="energyDelete(\''+eEsc(r.id)+'\')">Delete</button></td></tr>').join('')||'<tr><td colspan="11" class="note">No records yet.</td></tr>';
+}
+window.energyExportCSV=function(){
+ const rows=eLoad();if(!rows.length){alert('Export ke liye data nahi hai.');return}
+ const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
+ const csv=[head,...rows.map(r=>[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+ const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Machine_Energy_Register.csv';a.click();URL.revokeObjectURL(url);
+}
+window.energyPrint=function(){
+ const rows=eLoad();if(!rows.length){alert('Print ke liye data nahi hai.');return}
+ const w=window.open('','_blank','width=1300,height=800');if(!w)return;
+ const head=['DATE','MACHINE NO.','KWH','UNIT CONSUMPTION PER DAY','UNIT CONSUMPTION PER HOUR','RUN HOUR READING','LOAD HOUR READING','TOTAL RUN HOUR','TOTAL LOAD HOUR','REMARKS'];
+ const body=rows.map(r=>'<tr>'+[r.date,r.machineNo,r.kwh,r.unitPerDay,r.unitPerHour,r.runHourReading,r.loadHourReading,r.totalRunHour,r.totalLoadHour,r.remark].map(v=>'<td>'+eEsc(v)+'</td>').join('')+'</tr>').join('');
+ w.document.write('<!doctype html><html><head><title>Machine Energy Register</title><style>body{font-family:Arial;font-size:9px}h2{text-align:center}table{border-collapse:collapse;width:100%}th,td{border:1px solid #222;padding:4px;text-align:center}th{background:#eee}@media print{@page{size:A4 landscape;margin:6mm}}</style></head><body><h2>MILESTONE GEAR LTD. UNIT-7 — MACHINE ENERGY &amp; RUNNING HOUR REGISTER</h2><table><thead><tr>'+head.map(h=>'<th>'+h+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table></body></html>');w.document.close();setTimeout(()=>w.print(),300);
+}
+window.energyInit=function(){
+ const d=document.getElementById('energy_date');if(d&&!d.value)d.value=new Date().toISOString().slice(0,10);
+ eMachineOptions();energyRender();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',energyInit);else setTimeout(energyInit,0);
 })();
 </script>
 </body>
