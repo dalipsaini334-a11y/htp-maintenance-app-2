@@ -3313,7 +3313,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* ================= GOOGLE SHEET REAL-TIME AUTO SYNC ================= */
 const GOOGLE_SHEET_WEB_APP_URL='https://script.google.com/macros/s/AKfycbwEyG1SPn8J9HoHKV1MtXIF2PLtdqM8wwYi0bYnM_jFt0y78ZuzbxRdU7My-PMCmqE/exec';
 const GOOGLE_SHEET_URL_KEY='htp7_google_sheet_url';
-const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v4';
+const GOOGLE_SHEET_SYNC_KEY='htp7_google_sheet_sync_v5';
 const MODULE_KEYS=[
   'htp7_pf','htp7_pc','htp7_dg','htp7_mr','htp7_bd','htp7_pm',
   'htp7_machine_master_editable_v1','htp7_mh','htp7_spare_inventory_v1',
@@ -3413,6 +3413,28 @@ async function sheetFetchJSON(action, timeoutMs = 30000){
 
     document.head.appendChild(script);
   });
+}
+
+async function sheetTestConnection(){
+  sheetSetStatusSafe('🔄 Google Sheet connection test ho raha hai...', false);
+
+  try{
+    const result = await sheetFetchJSON('ping', 20000);
+
+    if(result && result.status === 'success'){
+      sheetSetStatusSafe('🟢 Google Sheet Connected ✓', true);
+      alert('Google Sheet connection successful ✓');
+      return true;
+    }
+
+    throw new Error(result?.message || 'Ping response invalid');
+  }catch(e){
+    console.error('[Google Sheet] Connection test failed:', e);
+    const msg = e?.message || String(e);
+    sheetSetStatusSafe('🔴 Google Sheet Connection Failed', false);
+    alert('Google Sheet connection failed.\n\nReason: ' + msg + '\n\nApps Script Web App deployment aur access setting check karein.');
+    return false;
+  }
 }
 
 async function sheetLoadNow(silent = false){
