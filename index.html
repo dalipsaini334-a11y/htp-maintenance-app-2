@@ -1948,10 +1948,23 @@ function setMRDuration(){setv('mr_duration',dateTimeDuration(f('mr_mdate'),f('mr
 ['mr_mdate','mr_mtime','mr_hdate','mr_htime'].forEach(id=>document.getElementById(id)?.addEventListener('input',setMRDuration));
 
 function savePF(){
+    // 👇 Yahan paste karein validation check
+    let dateVal = f('pf_date');
+    let kwhVal = num(f('pf_kwh'));
+    let kvahVal = num(f('pf_kvah'));
+    
+    if(!dateVal) return alert('Error: Date bharna anivarya hai!');
+    if(kwhVal < 0 || kvahVal < 0) return alert('Error: KWH ya KVAH reading negative nahi ho sakti!');
+
+    let row={date:dateVal, time:f('pf_time'), kwh:kwhVal, kvah:kvahVal, status:f('pf_status'), sign:f('pf_sign')};
+    if(edit.pf!==null) data.pf[edit.pf]=row; else data.pf.push(row);
+    persist('pf'); edit.pf=null; clearPF(); renderPF();
+}
  let row={date:f('pf_date'),time:f('pf_time'),kwh:num(f('pf_kwh')),kvah:num(f('pf_kvah')),status:f('pf_status'),sign:f('pf_sign')};
  if(!row.date)return alert('Date required'); if(edit.pf!==null)data.pf[edit.pf]=row;else data.pf.push(row);
  persist('pf');edit.pf=null;clearPF();renderPF()
-}
+
+
 function renderPF(){
  let a=[...data.pf].sort((x,y)=>(x.date+x.time).localeCompare(y.date+y.time));let prev=null;
  document.getElementById('pfBody').innerHTML=a.map(r=>{let kd=prev==null?'':(r.kwh-prev.kwh).toFixed(1),vd=prev==null?'':(r.kvah-prev.kvah).toFixed(1),pf=(kd!==''&&num(vd)!==0)?(num(kd)/num(vd)).toFixed(3):'';prev=r;let real=data.pf.indexOf(r);
@@ -1961,7 +1974,15 @@ function renderPF(){
 function editPF(i){let r=data.pf[i];edit.pf=i;for(let k of ['date','time','kwh','kvah','status','sign'])setv('pf_'+k,r[k]);window.scrollTo({top:0,behavior:'smooth'})}
 function clearPF(){['date','kwh','kvah','status','sign'].forEach(x=>setv('pf_'+x,''));setv('pf_time','06:30');edit.pf=null}
 
-function savePC(){
+function savePC(){function savePC(){
+    // 👇 Yahan paste karein validation check
+    let dateVal = f('pc_date');
+    if(!dateVal) return alert('Error: Date bharna anivarya hai!');
+
+    let r={date:dateVal, time:f('pc_time'), dg1:num(f('pc_dg1stock')), dg2:num(f('pc_dg2stock')), stock:num(f('pc_stock')), add:num(f('pc_addstock')), from:f('pc_from'), to:f('pc_to'), c1:num(f('pc_c1')), c2:num(f('pc_c2')), sign:f('pc_sign')};
+    if(edit.pc!==null) data.pc[edit.pc]=r; else data.pc.push(r); 
+    persist('pc'); edit.pc=null; clearPC(); renderPC();
+}
  let r={date:f('pc_date'),time:f('pc_time'),dg1:num(f('pc_dg1stock')),dg2:num(f('pc_dg2stock')),stock:num(f('pc_stock')),add:num(f('pc_addstock')),from:f('pc_from'),to:f('pc_to'),c1:num(f('pc_c1')),c2:num(f('pc_c2')),sign:f('pc_sign')};
  if(!r.date)return alert('Date required');if(edit.pc!==null)data.pc[edit.pc]=r;else data.pc.push(r);persist('pc');edit.pc=null;clearPC();renderPC()
 }
@@ -1974,7 +1995,15 @@ function renderPC(){
 function editPC(i){let r=data.pc[i];edit.pc=i;Object.entries({date:r.date,time:r.time,dg1stock:r.dg1,dg2stock:r.dg2,stock:r.stock,addstock:r.add,from:r.from,to:r.to,c1:r.c1,c2:r.c2,sign:r.sign}).forEach(([k,v])=>setv('pc_'+k,v));window.scrollTo({top:0,behavior:'smooth'})}
 function clearPC(){['date','dg1stock','dg2stock','stock','addstock','from','to','c1','c2','sign'].forEach(x=>setv('pc_'+x,''));setv('pc_time','06:30');edit.pc=null}
 
-function saveDG(){
+function saveDG(){function saveDG(){
+    // 👇 Yahan paste karein validation check
+    let dateVal = f('dg_date');
+    if(!dateVal) return alert('Error: Date bharna anivarya hai!');
+
+    let r={date:dateVal, time:f('dg_time'), dg1hr:f('dg1_hr'), dg1kwh:num(f('dg1_kwh')), dg1kvah:num(f('dg1_kvah')), dg1fuel:num(f('dg1_fuel')), dg2hr:f('dg2_hr'), dg2kwh:num(f('dg2_kwh')), dg2kvah:num(f('dg2_kvah')), dg2fuel:num(f('dg2_fuel')), status:f('dg_status')};
+    if(edit.dg!==null) data.dg[edit.dg]=r; else data.dg.push(r); 
+    persist('dg'); edit.dg=null; clearDG(); renderDG();
+}
  let r={date:f('dg_date'),time:f('dg_time'),dg1hr:f('dg1_hr'),dg1kwh:num(f('dg1_kwh')),dg1kvah:num(f('dg1_kvah')),dg1fuel:num(f('dg1_fuel')),dg2hr:f('dg2_hr'),dg2kwh:num(f('dg2_kwh')),dg2kvah:num(f('dg2_kvah')),dg2fuel:num(f('dg2_fuel')),status:f('dg_status')};
  if(!r.date)return alert('Date required');if(edit.dg!==null)data.dg[edit.dg]=r;else data.dg.push(r);persist('dg');edit.dg=null;clearDG();renderDG()
 }
