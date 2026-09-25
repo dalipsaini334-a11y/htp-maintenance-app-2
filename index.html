@@ -3360,9 +3360,18 @@ async function sheetFetchJSON(action,timeoutMs=30000){
         method:'GET',cache:'no-store',credentials:'omit',redirect:'follow',
         signal:controller.signal,headers:{'Accept':'application/json'}
       });
-      const raw=await r.text();
+      const raw=(await r.text()).trim();
       if(!r.ok) throw new Error('HTTP '+r.status+' '+r.statusText);
-      const d=JSON.parse(raw);
+      // Apps Script can return JSONP even on a normal fetch. Accept both
+      // plain JSON and callback({...}); so verification does not fail.
+      let d;
+      try{
+        d=JSON.parse(raw);
+      }catch(parseErr){
+        const m=raw.match(/^[A-Za-z_$][0-9A-Za-z_$\.]*\\((.*)\\);?\\s*$/s);
+        if(!m) throw parseErr;
+        d=JSON.parse(m[1]);
+      }
       if(!d||typeof d!=='object') throw new Error('Invalid backend response');
       return d;
     }finally{clearTimeout(timer);}
