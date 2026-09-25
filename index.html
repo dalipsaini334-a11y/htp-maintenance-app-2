@@ -3322,243 +3322,386 @@ const MODULE_KEYS=[
   'htp7_sat_records_v1','htp7_financial_years_v1'
 ];
 
-function sheetUrl(){ return GOOGLE_SHEET_WEB_APP_URL; }
 
-function sheetStatus(msg, ok){
-  const el = document.getElementById('sheetSyncStatus');
-  if(el){
-    el.textContent = msg;
-    el.title = msg;
-    el.style.color = ok ? '#1b7f3a' : '#9a6700';
-  }
+function sheetUrl(){
+  // Keep the deployed Apps Script URL as the single source of truth.
+  return GOOGLE_SHEET_WEB_APP_URL;
 }
 
-function sheetCollectModules(){
-  const data = {};
-  MODULE_KEYS.forEach(k => {
-    const v = localStorage.getItem(k);
-    if(v !== null) data[k] = v;
-  });
+let sheetLoadInProgress = false;
+let sheetSaveInProgress = false;
+let sheetSyncApplying = false;
+let sheetLastLoadedAt = 0;
+let sheetLastSaveAt = 0;
 
+function sheetEndpoint(action){
+  const base = sheetUrl();
+  return base + (base.includes('?') ? '&' : '?') +
+    'action=' + encodeURIComponent(action) + '&ts=' + Date.now();
+}
+
+function sheetSetStatusSafe(msg, ok){
+  try { sheetStatus(msg, ok); } catch(e) {}
+}
+
+async function sheetFetchJSON(action, timeoutMs = 30000){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try{
-    const rows = [];
-    for(let i = 0; i < localStorage.length; i++){
-      const k = localStorage.key(i) || '';
-      if(!k.startsWith('htp7_pm_year_plan_v3_')) continue;
-      const fy = k.slice('htp7_pm_year_plan_v3_'.length);
-      let obj = {};
-      try{ obj = JSON.parse(localStorage.getItem(k) || '{}') || {}; }catch(e){ obj = {}; }
-      Object.keys(obj).forEach(planKey => {
-        const rec = obj[planKey] || {};
-        const row = { FY: fy, PlanKey: planKey, Frequency: rec.frequency || '' };
-        const months = rec.months && typeof rec.months === 'object' ? rec.months : {};
-        Object.keys(months).forEach(month => {
-          const m = months[month] || {};
-          Object.keys(m).forEach(field => row[month + ' ' + field] = m[field]);
-        });
-        rows.push(row);
-      });
-    }
-    if(rows.length) data.htp7_pm_plan_v1 = JSON.stringify(rows);
-  }catch(e){ console.warn('PM Plan collection skipped', e); }
-  return data;
-}
-
-function sheetEnsureFrame(){
-  let f = document.getElementById('googleSheetSaveFrame');
-  if(!f){
-    f = document.createElement('iframe');
-    f.id = 'googleSheetSaveFrame';
-    f.name = 'googleSheetSaveFrame';
-    f.style.display = 'none';
-    document.body.appendChild(f);
-  }
-  return f;
-}
-
-function sheetSleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-function sheetJsonp(action, timeoutMs){
-  return new Promise((resolve, reject) => {
-    const cb = '__htpSheetCb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-    const s = document.createElement('script');
-    let done = false, got = false;
-    const timer = setTimeout(() => { finish(); reject(new Error('TIMEOUT')); }, timeoutMs || 15000);
-    function finish(){
-      if(done) return;
-      done = true;
-      clearTimeout(timer);
-      try{ delete window[cb]; }catch(e){ window[cb] = undefined; }
-      if(s.parentNode) s.parentNode.removeChild(s);
-    }
-    window[cb] = d => { got = true; finish(); resolve(d); };
-    s.onerror = () => { finish(); reject(new Error('BLOCKED')); };
-    s.onload = () => { if(!got){ finish(); reject(new Error('NOCALLBACK')); } };
-    s.src = sheetUrl() + '?action=' + encodeURIComponent(action) + '&callback=' + encodeURIComponent(cb) + '&ts=' + Date.now();
-    document.head.appendChild(s);
-  });
-}
-
-async function sheetCall(action, timeoutMs){
-  return await sheetJsonp(action, timeoutMs);
-}
-
-/* --- AUTO SAVE TO GOOGLE SHEET ENGINE --- */
-let _sheetSaveTimer = null;
-let _sheetSaveActive = false;
-
-function triggerImmediateAutoSave(){
-  clearTimeout(_sheetSaveTimer);
-  _sheetSaveTimer = setTimeout(async () => {
-    if(_sheetSaveActive) return;
-    _sheetSaveActive = true;
-    try {
-      await sheetSaveNow({ silent: true });
-    } catch(err) {
-      console.warn('Auto save error:', err);
-    } finally {
-      _sheetSaveActive = false;
-    }
-  }, 1000); // Entry karne ke 1 sec ke andar auto-save ho jayega
-}
-
-async function sheetSaveNow(options = {}){
-  const silent = !!options.silent;
-  const dataToSave = sheetCollectModules();
-  const keys = Object.keys(dataToSave);
-  if(!keys.length) return false;
-
-  const saveId = Date.now() + '-' + Math.floor(Math.random() * 1000000);
-  sheetStatus(silent ? '☁️ Auto-saving to Sheet...' : 'Saving to Google Sheet...', false);
-
-  let form = null;
-  try{
-    const frame = sheetEnsureFrame();
-    form = document.createElement('form');
-    form.method = 'POST';
-    form.action = sheetUrl();
-    form.target = frame.name;
-    form.enctype = 'application/x-www-form-urlencoded';
-    form.style.display = 'none';
-
-    [['action','saveModules'],['saveId',saveId],['payload',JSON.stringify(dataToSave)]].forEach(([n, v]) => {
-      const i = document.createElement('input');
-      i.type = 'hidden';
-      i.name = n;
-      i.value = v;
-      form.appendChild(i);
+    const response = await fetch(sheetEndpoint(action), {
+      method: 'GET',
+      cache: 'no-store',
+      credentials: 'omit',
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: { 'Accept': 'application/json' }
     });
 
-    document.body.appendChild(form);
-    form.submit();
+    const raw = await response.text();
+    if(!response.ok){
+      throw new Error('HTTP ' + response.status + ' ' + response.statusText);
+    }
 
-    await sheetSleep(2000);
-    localStorage.setItem(GOOGLE_SHEET_SYNC_KEY, new Date().toISOString());
-    sheetStatus('Google Sheet Synced ✓', true);
-    if(!silent) alert('Google Sheet mein successfully save ho gaya!');
-    return true;
-  }catch(e){
-    sheetStatus('Sync failed (offline)', false);
-    return false;
+    let data;
+    try{
+      data = JSON.parse(raw);
+    }catch(parseErr){
+      throw new Error('Apps Script returned non-JSON data');
+    }
+
+    if(!data || typeof data !== 'object'){
+      throw new Error('Invalid response from Google Sheet backend');
+    }
+    return data;
   }finally{
-    if(form) form.remove();
+    clearTimeout(timer);
   }
 }
 
-/* --- AUTO LOAD / PULL FROM GOOGLE SHEET ENGINE --- */
 async function sheetLoadNow(silent = false){
+  if(sheetLoadInProgress) return false;
+  if(sheetSaveInProgress) return false;
+
   if(!silent){
     if(!confirm('Google Sheet se naya data load karna chahte hain?')) return false;
   }
-  sheetStatus('📥 Checking latest data...', false);
+
+  sheetLoadInProgress = true;
+  sheetSetStatusSafe('📥 Google Sheet se latest data load ho raha hai...', false);
+
   try{
-    const result = await sheetCall('loadModulesJSONP', 25000);
-    if(!result || result.status !== 'success' || !result.modules) return false;
+    const result = await sheetFetchJSON('loadModules', 30000);
 
-    let hasNewData = false;
+    if(!result || result.status !== 'success' || !result.modules){
+      throw new Error(result?.message || 'Module data receive nahi hua');
+    }
 
-    // PM Plan Restore
+    let loadedCount = 0;
+    let changedCount = 0;
+
+    sheetSyncApplying = true;
+
     try{
+      // Restore every module exactly by its existing localStorage key.
+      Object.entries(result.modules).forEach(([key, info]) => {
+        if(!info || !info.hasData) return;
+        if(info.data === null || typeof info.data === 'undefined') return;
+
+        const fresh = typeof info.data === 'string'
+          ? info.data
+          : JSON.stringify(info.data);
+
+        loadedCount++;
+
+        if(localStorage.getItem(key) !== fresh){
+          localStorage.setItem(key, fresh);
+          changedCount++;
+        }
+      });
+
+      // Restore PM yearly plan data from the flattened PM Plan sheet.
       const pm = result.modules['htp7_pm_plan_v1'];
       if(pm && pm.hasData && Array.isArray(pm.data)){
         const byFY = {};
+
         pm.data.forEach(row => {
-          const fy = String(row.FY || '').trim();
-          const planKey = String(row.PlanKey || '').trim();
+          const fy = String(row?.FY || '').trim();
+          const planKey = String(row?.PlanKey || '').trim();
           if(!fy || !planKey) return;
+
           byFY[fy] = byFY[fy] || {};
-          const rec = byFY[fy][planKey] || { frequency: row.Frequency || '', months: {} };
-          if(row.Frequency !== undefined) rec.frequency = row.Frequency || '';
+          const rec = byFY[fy][planKey] || {
+            frequency: row?.Frequency || '',
+            months: {}
+          };
+
+          if(row?.Frequency !== undefined) rec.frequency = row.Frequency || '';
           rec.months = rec.months || {};
+
           Object.keys(row).forEach(k => {
             const m = k.match(/^(.+) (planned|actual|nextDate|tech|work|remark|pmCheckId)$/);
             if(!m) return;
-            const month = m[1], field = m[2];
+
+            const month = m[1];
+            const field = m[2];
+
             rec.months[month] = rec.months[month] || {};
             rec.months[month][field] = row[k] ?? '';
           });
+
           byFY[fy][planKey] = rec;
         });
+
         Object.keys(byFY).forEach(fy => {
           const kName = 'htp7_pm_year_plan_v3_' + fy;
           const fresh = JSON.stringify(byFY[fy]);
+
           if(localStorage.getItem(kName) !== fresh){
             localStorage.setItem(kName, fresh);
-            hasNewData = true;
+            changedCount++;
           }
+        });
+      }
+
+      localStorage.setItem('htp7_google_sheet_sync_v1', new Date().toISOString());
+    }finally{
+      sheetSyncApplying = false;
+    }
+
+    sheetLastLoadedAt = Date.now();
+
+    // Rehydrate the app's in-memory state after localStorage restore.
+    try{
+      if(typeof data !== 'undefined' && typeof KEY !== 'undefined' && typeof load === 'function'){
+        Object.keys(KEY).forEach(k => {
+          try { data[k] = load(k); } catch(e) {}
         });
       }
     }catch(e){}
 
-    // All Other Modules Restore
+    // Refresh the visible UI without changing module definitions.
+    try{
+      if(typeof renderAll === 'function') renderAll();
+    }catch(e){}
+
+    try{
+      if(typeof renderDashboard === 'function') renderDashboard();
+    }catch(e){}
+
+    try{
+      if(typeof refreshDashboard === 'function') refreshDashboard();
+    }catch(e){}
+
+    sheetSetStatusSafe(
+      changedCount
+        ? `Google Sheet Synced ✓ (${changedCount} changes)`
+        : `Google Sheet Synced ✓ (${loadedCount} modules)`,
+      true
+    );
+
+    return true;
+
+  }catch(e){
+    const msg = e?.name === 'AbortError'
+      ? 'Google Sheet load timeout'
+      : (e?.message || String(e));
+
+    console.error('[Google Sheet] Load failed:', e);
+    sheetSetStatusSafe('⚠️ Google Sheet fetch failed — Local data active', false);
+
+    if(!silent){
+      alert('Google Sheet se data fetch nahi ho pa raha.\n\nReason: ' + msg +
+            '\n\nLocal data safe hai. Apps Script deployment/URL aur access setting check karein.');
+    }
+
+    return false;
+  }finally{
+    sheetLoadInProgress = false;
+  }
+}
+
+function sheetCollectModules(){
+  const payload = {};
+
+  try{
     MODULE_KEYS.forEach(k => {
-      if(k === 'htp7_pm_plan_v1') return;
-      const m = result.modules[k];
-      if(m && m.hasData){
-        const fresh = typeof m.data === 'string' ? m.data : JSON.stringify(m.data);
-        if(localStorage.getItem(k) !== fresh){
-          localStorage.setItem(k, fresh);
-          hasNewData = true;
+      const raw = localStorage.getItem(k);
+      if(raw !== null && raw !== ''){
+        try{
+          payload[k] = JSON.parse(raw);
+        }catch(e){
+          payload[k] = raw;
         }
       }
     });
 
-    if(hasNewData){
-      sheetStatus('Google Sheet Synced ✓', true);
-      // Reload or refresh local view
-      if(typeof data !== 'undefined'){
-        Object.keys(KEY).forEach(k => { if(typeof load === 'function') data[k] = load(k); });
-      }
-      if(typeof renderAll === 'function') renderAll();
-    } else {
-      sheetStatus('Google Sheet Synced ✓', true);
+    // Keep PM yearly plans in the same payload flow used by the existing app.
+    const pmRows = [];
+    for(let i=0; i<localStorage.length; i++){
+      const key = localStorage.key(i);
+      if(!key || !key.startsWith('htp7_pm_year_plan_v3_')) continue;
+
+      const fy = key.replace('htp7_pm_year_plan_v3_', '');
+      const raw = localStorage.getItem(key);
+      if(!raw) continue;
+
+      let obj;
+      try{ obj = JSON.parse(raw); }catch(e){ continue; }
+
+      Object.entries(obj || {}).forEach(([planKey, rec]) => {
+        const row = {
+          FY: fy,
+          PlanKey: planKey,
+          Frequency: rec?.frequency || ''
+        };
+
+        Object.entries(rec?.months || {}).forEach(([month, vals]) => {
+          ['planned','actual','nextDate','tech','work','remark','pmCheckId'].forEach(field => {
+            if(vals && vals[field] !== undefined){
+              row[month + ' ' + field] = vals[field];
+            }
+          });
+        });
+
+        pmRows.push(row);
+      });
     }
-    return true;
+
+    if(pmRows.length) payload['htp7_pm_plan_v1'] = pmRows;
   }catch(e){
-    sheetStatus('Online (Local Active)', true);
+    console.error('[Google Sheet] Collect failed:', e);
+  }
+
+  return payload;
+}
+
+function sheetEnsureFrame(){
+  let frame = document.getElementById('htp7_google_sheet_save_frame');
+  if(frame) return frame;
+
+  frame = document.createElement('iframe');
+  frame.id = 'htp7_google_sheet_save_frame';
+  frame.name = 'htp7_google_sheet_save_frame';
+  frame.style.display = 'none';
+  document.body.appendChild(frame);
+  return frame;
+}
+
+async function sheetSaveNow(showStatus = true){
+  if(sheetSaveInProgress) return false;
+  if(sheetSyncApplying) return false;
+
+  sheetSaveInProgress = true;
+
+  try{
+    if(showStatus) sheetSetStatusSafe('📤 Google Sheet me data save ho raha hai...', false);
+
+    const payload = sheetCollectModules();
+    const saveId = 'save_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = sheetUrl();
+    form.target = 'htp7_google_sheet_save_frame';
+    form.style.display = 'none';
+
+    const addField = (name, value) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    };
+
+    addField('action', 'saveModules');
+    addField('saveId', saveId);
+    addField('payload', JSON.stringify(payload));
+
+    document.body.appendChild(form);
+    sheetEnsureFrame();
+    form.submit();
+    form.remove();
+
+    sheetLastSaveAt = Date.now();
+    localStorage.setItem('htp7_google_sheet_last_save_v1', new Date(sheetLastSaveAt).toISOString());
+
+    // The Apps Script POST is intentionally fire-and-forget because the browser
+    // cannot reliably read a cross-origin iframe response. Do not show a false
+    // "verified" message; show that the save request was sent.
+    if(showStatus){
+      sheetSetStatusSafe('📤 Google Sheet save request sent ✓', true);
+    }
+
+    return true;
+
+  }catch(e){
+    console.error('[Google Sheet] Save failed:', e);
+    sheetSetStatusSafe('⚠️ Google Sheet save failed — Local data safe', false);
     return false;
+  }finally{
+    sheetSaveInProgress = false;
   }
 }
 
-// Global Storage Interceptor (Kisi bhi module mein save ho, auto sync chal jayega)
-(function hookStorage(){
-  const originalSet = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(k, v){
-    originalSet(k, v);
-    if(MODULE_KEYS.includes(k) || k.startsWith('htp7_pm_year_plan_v3_')){
-      triggerImmediateAutoSave();
-    }
+// Existing app may already call this function. Keep the name available.
+function sheetCall(action, timeoutMs){
+  return sheetFetchJSON(action === 'loadModulesJSONP' ? 'loadModules' : action, timeoutMs || 30000);
+}
+
+// Autosave: never save while a Sheet download is being applied.
+function triggerImmediateAutoSave(){
+  if(sheetSyncApplying || sheetLoadInProgress) return;
+  if(typeof window.__htp7AutoSaveTimer !== 'undefined'){
+    clearTimeout(window.__htp7AutoSaveTimer);
+  }
+  window.__htp7AutoSaveTimer = setTimeout(() => {
+    sheetSaveNow(true);
+  }, 700);
+}
+
+// Intercept module localStorage writes while preserving the original behavior.
+(function installSheetStorageHook(){
+  if(window.__htp7SheetStorageHookInstalled) return;
+  window.__htp7SheetStorageHookInstalled = true;
+
+  const originalSetItem = Storage.prototype.setItem;
+  Storage.prototype.setItem = function(key, value){
+    const result = originalSetItem.call(this, key, value);
+
+    try{
+      if(
+        this === localStorage &&
+        !sheetSyncApplying &&
+        !sheetLoadInProgress &&
+        !sheetSaveInProgress &&
+        MODULE_KEYS.includes(String(key))
+      ){
+        triggerImmediateAutoSave();
+      }
+    }catch(e){}
+
+    return result;
   };
 })();
 
-// Automatic Background Polling (Har 15 seconds mein Google Sheet se live updates khinchega)
-setInterval(() => {
-  sheetLoadNow(true);
-}, 15000);
+// Background refresh: do not compete with an active load/save.
+function sheetStartAutoRefresh(){
+  if(window.__htp7SheetRefreshTimer) return;
 
-// App start hote hi pehle Google Sheet se taaza data uthayega
+  window.__htp7SheetRefreshTimer = setInterval(() => {
+    if(document.hidden) return;
+    if(sheetLoadInProgress || sheetSaveInProgress || sheetSyncApplying) return;
+
+    // Give a just-completed local save a short settling period.
+    if(Date.now() - sheetLastSaveAt < 5000) return;
+
+    sheetLoadNow(true);
+  }, 15000);
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  sheetLoadNow(true);
+  setTimeout(() => sheetLoadNow(true), 250);
+  sheetStartAutoRefresh();
 });
 </script><script>
 /* PWA: service worker + 📲 Install App button */
