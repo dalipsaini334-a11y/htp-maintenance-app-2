@@ -3474,7 +3474,7 @@ async function sheetLoadNow(silent=false){
   sheetLoadInProgress=true;
   sheetSetStatusSafe('📥 Google Sheet se latest data load ho raha hai...',false);
   try{
-    const result=await sheetFetchJSON('loadModules',30000);
+    const result=await sheetFetchJSON('loadModulesJSONP',30000);
     if(!result||result.status!=='success'||!result.modules)throw new Error(result?.message||'Module data receive nahi hua');
     let loaded=0,changed=0;
     sheetSyncApplying=true;
@@ -3527,7 +3527,7 @@ async function sheetLoadNow(silent=false){
     return false;
   }finally{sheetLoadInProgress=false}
 }
-function sheetCall(action,timeoutMs){return sheetFetchJSON(action==='loadModulesJSONP'?'loadModules':action,timeoutMs||30000)}
+function sheetCall(action,timeoutMs){return sheetFetchJSON(action,timeoutMs||30000)}
 function triggerImmediateAutoSave(){
   if(sheetSyncApplying||sheetLoadInProgress||sheetSaveInProgress)return;
   clearTimeout(window.__htp7AutoSaveTimer);
