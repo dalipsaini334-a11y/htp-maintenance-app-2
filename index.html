@@ -3380,7 +3380,8 @@ async function sheetFetchJSON(action,timeoutMs=30000){
 async function sheetTestConnection(){
   sheetSetStatusSafe('🔄 Google Sheet connection test...',false);
   try{
-    const d=await sheetFetchJSON('ping',20000);
+    let d;
+    try{d=await sheetFetchJSON('ping',12000)}catch(e){d=await sheetFetchJSON('load',20000)}
     if(d&&d.status==='success'){
       sheetSetStatusSafe('🟢 Google Sheet Connected ✓',true);
       alert('Google Sheet connection successful ✓');
@@ -3453,7 +3454,7 @@ async function sheetSaveNow(showStatus=true){
     await new Promise(r=>setTimeout(r,1800));
     let verify=null,lastVerifyErr=null;
     for(let attempt=1;attempt<=4;attempt++){
-      try{verify=await sheetFetchJSON('loadModules',25000);if(verify&&verify.status==='success'&&verify.modules)break;lastVerifyErr=new Error(verify?.message||'Backend response invalid');}
+      try{verify=await sheetFetchJSON('load',25000);if(verify&&verify.status==='success'&&verify.modules)break;lastVerifyErr=new Error(verify?.message||'Backend response invalid');}
       catch(err){lastVerifyErr=err}
       await new Promise(r=>setTimeout(r,1200));
     }
